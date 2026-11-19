@@ -47,6 +47,12 @@
    <a href="#join">Join Us</a>
    <a href="#" data-discord>Discord</a>
   </nav>
+  <!-- LIVE CLOCKS: UTC and the visitor's own local time (with their timezone code).
+       script.js fills these in and updates them every second. -->
+  <div class="site-clock" role="group" aria-label="Current time in UTC and in your local timezone">
+   <div class="clock-item"><div class="clock-line"><span class="clock-zone" data-clock="utc-zone">UTC</span><span class="clock-time" data-clock="utc-time">--:--:--</span></div><span class="clock-date" data-clock="utc-date">&nbsp;</span></div>
+   <div class="clock-item" title="Your local time"><div class="clock-line"><span class="clock-zone" data-clock="loc-zone">Local</span><span class="clock-time" data-clock="loc-time">--:--:--</span></div><span class="clock-date" data-clock="loc-date">&nbsp;</span></div>
+  </div>
   <div class="header-actions">
    <button class="theme-btn" id="themeToggle" type="button" aria-label="Toggle colour theme" title="Toggle theme">◐</button>
    <!-- This box changes language automatically; it is not a button. Languages are listed in script.js. -->
@@ -158,6 +164,7 @@
     <div class="detail-tabs" role="tablist" aria-label="ΛRISE information">
      <button class="tab-btn active" data-tab="arise-about" role="tab" aria-selected="true">Λbout ΛRISE</button>
      <button class="tab-btn" data-tab="arise-goals" role="tab" aria-selected="false">Guild Goals</button>
+     <button class="tab-btn" data-tab="arise-resets" role="tab" aria-selected="false">Reset Times</button>
      <button class="tab-btn" data-tab="arise-recruit" role="tab" aria-selected="false">Apply to Join</button>
      <button class="tab-btn" data-tab="arise-leaders" role="tab" aria-selected="false">Leadership</button>
      <button class="tab-btn" data-tab="arise-members" role="tab" aria-selected="false">Members</button>
@@ -185,6 +192,41 @@
        <p class="small-note">Guild Boss Contribution Points = [(Rage Count × 10) + 255] × P. Set P = 1 if Guild Boss has been played, or P = 0 if it has not been played.</p>
        <p class="small-note">Guild Mission Contribution Points = Total Guild Contribution Points − Guild Boss Contribution Points.</p>
        <p class="small-note">To find your total points: Guild Lobby → Guild Menu → Guild Information → Guild Member → find your name. Your total points appear beside it.</p></div></div>
+
+     <!-- TAB: Reset Times. Each card is filled in by script.js (section 9B): next reset in UTC and in the visitor's local time, plus a live countdown.
+          To change a reset time, edit the RESETS list in script.js. Keep the data-reset names the same. -->
+     <div class="detail-pane" id="arise-resets"><h4>ΛRISE — Reset Times</h4><p class="lead">Solo Leveling:ΛRISE resets happen at fixed UTC times. Each card shows the next reset in UTC and in your own local time, with a live countdown.</p>
+      <div class="reset-list">
+       <article class="reset-card" data-reset="daily">
+        <div class="reset-head"><div><h3>Daily Reset</h3><p>Every day at 23:59:00 UTC.</p></div><div class="reset-count"><span class="reset-count-label">Next in</span><span class="reset-count-value" data-r="count">--</span></div></div>
+        <div class="reset-times">
+         <div class="reset-time"><span class="reset-zone" data-r="utc-zone">UTC</span><span class="reset-clock" data-r="utc-time">--:--:--</span><span class="reset-date" data-r="utc-date">&nbsp;</span></div>
+         <div class="reset-time"><span class="reset-zone" data-r="loc-zone">Your time</span><span class="reset-clock" data-r="loc-time">--:--:--</span><span class="reset-date" data-r="loc-date">&nbsp;</span></div>
+        </div>
+       </article>
+       <article class="reset-card" data-reset="weekly">
+        <div class="reset-head"><div><h3>Shop &amp; Weekly Reset</h3><p>Every Wednesday at 23:59:00 UTC.</p></div><div class="reset-count"><span class="reset-count-label">Next in</span><span class="reset-count-value" data-r="count">--</span></div></div>
+        <div class="reset-times">
+         <div class="reset-time"><span class="reset-zone" data-r="utc-zone">UTC</span><span class="reset-clock" data-r="utc-time">--:--:--</span><span class="reset-date" data-r="utc-date">&nbsp;</span></div>
+         <div class="reset-time"><span class="reset-zone" data-r="loc-zone">Your time</span><span class="reset-clock" data-r="loc-time">--:--:--</span><span class="reset-date" data-r="loc-date">&nbsp;</span></div>
+        </div>
+       </article>
+       <article class="reset-card" data-reset="shop">
+        <div class="reset-head"><div><h3>Guild Shop Reset</h3><p>Every Sunday at 23:59:00 UTC.</p></div><div class="reset-count"><span class="reset-count-label">Next in</span><span class="reset-count-value" data-r="count">--</span></div></div>
+        <div class="reset-times">
+         <div class="reset-time"><span class="reset-zone" data-r="utc-zone">UTC</span><span class="reset-clock" data-r="utc-time">--:--:--</span><span class="reset-date" data-r="utc-date">&nbsp;</span></div>
+         <div class="reset-time"><span class="reset-zone" data-r="loc-zone">Your time</span><span class="reset-clock" data-r="loc-time">--:--:--</span><span class="reset-date" data-r="loc-date">&nbsp;</span></div>
+        </div>
+       </article>
+       <article class="reset-card" data-reset="boss">
+        <div class="reset-head"><div><h3>Guild Boss Reset</h3><p>Every Wednesday at 23:30:00 UTC.</p></div><div class="reset-count"><span class="reset-count-label">Next in</span><span class="reset-count-value" data-r="count">--</span></div></div>
+        <div class="reset-times">
+         <div class="reset-time"><span class="reset-zone" data-r="utc-zone">UTC</span><span class="reset-clock" data-r="utc-time">--:--:--</span><span class="reset-date" data-r="utc-date">&nbsp;</span></div>
+         <div class="reset-time"><span class="reset-zone" data-r="loc-zone">Your time</span><span class="reset-clock" data-r="loc-time">--:--:--</span><span class="reset-date" data-r="loc-date">&nbsp;</span></div>
+        </div>
+       </article>
+      </div>
+      <div class="callout"><strong>Good to know:</strong> Times use the 24-hour format (HH:MM:SS) and update every second. Your local time and timezone code come from your device settings.</div></div>
 
      <div class="detail-pane" id="arise-recruit"><h4>ΛRISE — Apply to Join</h4><p class="lead">Join our Discord, open the application channel and submit clear screenshots for evaluation.</p>
       <div class="content-grid">

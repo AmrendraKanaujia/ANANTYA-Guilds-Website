@@ -521,6 +521,139 @@
 
 
   /* ========================================================================
+     9B. LIVE CLOCKS (header) AND ΛRISE RESET TIMES
+     --------------------------------------------------------------------
+     FORMAT (chosen to be understood by visitors from any country):
+       time = 24-hour HH:MM:SS, e.g. 18:05:09   (no AM/PM confusion)
+       date = weekday, day, month NAME, year, e.g. Fri 20 Nov 2026
+              (a month name can't be mixed up like 03/04/2026 can)
+     The timezone code (IST, PST, CET ...) is the visitor's own, read from their device.
+
+     RESET TIMES use the same logic as the TimeDashboard bot:
+       Daily reset        every day        23:59 UTC
+       Shop & Weekly      every Wednesday  23:59 UTC
+       Guild Shop         every Sunday     23:59 UTC
+       Guild Boss         every Wednesday  23:30 UTC
+     weekday: Monday = 0 ... Sunday = 6 (same numbering as the bot)
+     ======================================================================== */
+  const RESETS = {
+    daily:  { weekday: null, hour: 23, minute: 59 },
+    weekly: { weekday: 2,    hour: 23, minute: 59 },
+    shop:   { weekday: 6,    hour: 23, minute: 59 },
+    boss:   { weekday: 2,    hour: 23, minute: 30 }
+  };
+
+  // Used only when the browser gives a vague name like "GMT+5:30" instead of a code
+  const TZ_ABBR = {
+    "Asia/Kolkata": "IST", "Asia/Calcutta": "IST", "Asia/Tokyo": "JST", "Asia/Seoul": "KST",
+    "Asia/Karachi": "PKT", "Asia/Singapore": "SGT", "Asia/Hong_Kong": "HKT", "Asia/Dubai": "GST",
+    "Asia/Manila": "PHT", "Asia/Bangkok": "ICT", "Asia/Ho_Chi_Minh": "ICT", "Asia/Jakarta": "WIB",
+    "Asia/Kuala_Lumpur": "MYT", "Europe/Moscow": "MSK", "Africa/Johannesburg": "SAST",
+    "Africa/Lagos": "WAT", "America/Sao_Paulo": "BRT"
+  };
+
+  const LOCAL_TZ = (function () {
+    try { return Intl.DateTimeFormat().resolvedOptions().timeZone || ""; } catch (e) { return ""; }
+  })();
+
+  const pad2 = n => String(n).padStart(2, "0");
+  const fmtCache = {}, nameCache = {};
+
+  // tz = "UTC" for UTC, or undefined for the visitor's own timezone
+  function dateFormatter(tz) {
+    const key = tz || "local";
+    if (!fmtCache[key]) {
+      const opts = { weekday: "short", day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23" };
+      if (tz) opts.timeZone = tz;
+      fmtCache[key] = new Intl.DateTimeFormat("en-GB", opts);
+    }
+    return fmtCache[key];
+  }
+
+  // -> { date: "Fri 20 Nov 2026", time: "18:05:09" }
+  function formatMoment(date, tz) {
+    const p = {};
+    dateFormatter(tz).formatToParts(date).forEach(part => { p[part.type] = part.value; });
+    return { date: p.weekday + " " + p.day + " " + p.month + " " + p.year, time: p.hour + ":" + p.minute + ":" + p.second };
+  }
+
+  // Timezone code for a moment ("UTC", "IST", "PST", "CET"...). Falls back to "UTC+5:30" style.
+  function zoneCode(date, tz) {
+    if (tz === "UTC") return "UTC";
+    for (const locale of ["en-US", "en-GB"]) {
+      const key = locale + "|" + (tz || "local");
+      if (!nameCache[key]) nameCache[key] = new Intl.DateTimeFormat(locale, Object.assign({ timeZoneName: "short" }, tz ? { timeZone: tz } : {}));
+      const part = nameCache[key].formatToParts(date).find(x => x.type === "timeZoneName");
+      if (part && !/^(GMT|UTC)[+\-\u2212]/.test(part.value)) return part.value;
+    }
+    if (TZ_ABBR[LOCAL_TZ]) return TZ_ABBR[LOCAL_TZ];
+    const offset = -date.getTimezoneOffset();
+    const abs = Math.abs(offset);
+    return "UTC" + (offset < 0 ? "-" : "+") + Math.floor(abs / 60) + (abs % 60 ? ":" + pad2(abs % 60) : "");
+  }
+
+  // Next daily / weekly reset, in milliseconds (UTC). Same logic as the bot's get_next_*_utc.
+  function nextReset(rule, now) {
+    const t = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), rule.hour, rule.minute, 0, 0);
+    let daysAhead = 0;
+    if (rule.weekday !== null) {
+      daysAhead = rule.weekday - ((now.getUTCDay() + 6) % 7);   // JS Sunday=0 -> bot's Monday=0
+      if (daysAhead < 0) daysAhead += 7;
+    }
+    if (daysAhead === 0 && now.getTime() >= t) daysAhead = rule.weekday === null ? 1 : 7;
+    return t + daysAhead * 86400000;
+  }
+
+  function countdownText(ms) {
+    let s = Math.max(0, Math.floor(ms / 1000));
+    const d = Math.floor(s / 86400); s %= 86400;
+    const h = Math.floor(s / 3600);  s %= 3600;
+    const m = Math.floor(s / 60);    s %= 60;
+    return (d ? d + "d " : "") + pad2(h) + "h " + pad2(m) + "m " + pad2(s) + "s";
+  }
+
+  // Write text into an element (with the Λ replacement), only if it changed
+  function setText(el, value) {
+    if (!el) return;
+    const v = lambdaify(value);
+    if (el.textContent !== v) el.textContent = v;
+  }
+
+  const clockEl = name => $('[data-clock="' + name + '"]');
+  const clocks = { uz: clockEl("utc-zone"), ut: clockEl("utc-time"), ud: clockEl("utc-date"), lz: clockEl("loc-zone"), lt: clockEl("loc-time"), ld: clockEl("loc-date") };
+
+  const resetCards = $$("[data-reset]").map(card => ({
+    card, rule: RESETS[card.dataset.reset], target: 0,
+    f: name => $('[data-r="' + name + '"]', card)
+  })).filter(r => r.rule);
+
+  function updateReset(r, now) {
+    if (!r.target || now.getTime() >= r.target) {            // (re)calculate when the reset has passed
+      r.target = nextReset(r.rule, now);
+      const when = new Date(r.target);
+      const u = formatMoment(when, "UTC"), l = formatMoment(when);
+      setText(r.f("utc-zone"), "UTC");        setText(r.f("utc-time"), u.time); setText(r.f("utc-date"), u.date);
+      setText(r.f("loc-zone"), "Your time · " + zoneCode(when));
+      setText(r.f("loc-time"), l.time);       setText(r.f("loc-date"), l.date);
+    }
+    setText(r.f("count"), countdownText(r.target - now.getTime()));
+  }
+
+  function tickClocks() {
+    const now = new Date();
+    const u = formatMoment(now, "UTC"), l = formatMoment(now);
+    setText(clocks.uz, "UTC");              setText(clocks.ut, u.time); setText(clocks.ud, u.date);
+    setText(clocks.lz, zoneCode(now));      setText(clocks.lt, l.time); setText(clocks.ld, l.date);
+    resetCards.forEach(r => updateReset(r, now));
+  }
+  function runClocks() {
+    try { tickClocks(); } catch (e) { /* never let a clock problem break the rest of the page */ }
+    setTimeout(runClocks, 1000 - (Date.now() % 1000) + 5);   // tick right after each new second
+  }
+  runClocks();
+
+
+  /* ========================================================================
      10. FINAL STEP: CAPITAL "A" -> "Λ" EVERYWHERE ON THE PAGE
      --------------------------------------------------------------------
      Text that comes from the data files was already converted above.
