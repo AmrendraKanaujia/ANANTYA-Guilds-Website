@@ -200,11 +200,20 @@ section{padding:76px 0}                                              /* vertical
    12. MEMBER CAROUSELS (slow continuous sideways loop)
    ========================================================================== */
 .member-carousel{position:relative;margin-top:14px}
-.member-window{overflow:hidden;touch-action:pan-y;cursor:grab}          /* the visible "frame" */
+/* The padding (top 4px, bottom 8px) gives the cards' borders room, so the frame no longer clips their edges */
+.member-window{overflow:hidden;touch-action:pan-y;cursor:grab;padding:4px 0 8px}   /* the visible "frame" */
 .member-window.dragging{cursor:grabbing}
 .member-track{display:flex;gap:14px;width:max-content;will-change:transform}   /* the moving strip of cards */
 .all-members-section{padding-top:56px}
-.member-controls{display:flex;justify-content:flex-end;align-items:center;gap:7px;margin-top:12px}
+.member-controls{display:flex;justify-content:flex-end;align-items:center;gap:7px;margin-top:16px;position:relative;z-index:1}
+
+/* Leadership tabs: when only a few leaders fit on screen, they stand still and are CENTRED.
+   (script.js adds the class "is-centered" automatically in that case.) */
+.member-carousel.is-centered .member-track{margin-left:auto;margin-right:auto}
+
+/* Leadership tabs: centred heading and description (class "center-head" is set in index.html) */
+.detail-pane.center-head h4{text-align:left}
+.detail-pane.center-head .lead{text-align:center;margin-left:auto;margin-right:auto}
 .carousel-btn{display:inline-grid;place-items:center;flex:0 0 34px;width:34px;height:34px;min-width:34px;padding:0;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;line-height:1;font-family:Arial,sans-serif;font-size:19px;font-weight:500}
 .carousel-btn:hover{border-color:var(--accent);color:var(--accent)}
 .carousel-btn.play-toggle{font-size:14px;font-weight:700}

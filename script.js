@@ -233,12 +233,14 @@
           pool.forEach(p => { items.push(p); track.appendChild(makeCard(p)); });
           isStatic = true;
           controlsEl.hidden = true;
+          root.classList.add("is-centered");             // few leaders -> centre them
         } else if (!fits && isStatic) {
           // screen got narrower -> go back to rolling
           track.innerHTML = "";
           items = []; bag = []; history = [];
           isStatic = false;
           controlsEl.hidden = false;
+          root.classList.remove("is-centered");          // too many to fit -> roll from the left
           appendOne();
         }
         if (isStatic) {
