@@ -1,0 +1,291 @@
+/* ==========================================================================
+   style.css  —  HOW THE SITE LOOKS (colours, sizes, spacing)
+   --------------------------------------------------------------------------
+   HOW TO TWEAK:
+   - Colours: change the hex codes (like #a65d37) in SECTION 1.
+   - Text size: look for "font-size". Bigger number = bigger text.
+   - Space: "padding" is space INSIDE a box, "margin" is space OUTSIDE it,
+            "gap" is space BETWEEN items.
+   - Rounded corners: "border-radius". Bigger number = rounder.
+   - Everything between and is a note. The browser ignores it.
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. COLOURS  (change these and the whole site changes)
+   ========================================================================== */
+:root{
+  color-scheme:light;
+  --bg:#f6f3ee;          /* page background */
+  --surface:#fffdfa;     /* cards and boxes */
+  --surface-2:#eee9e1;   /* slightly darker boxes */
+  --ink:#25231f;         /* main text colour */
+  --muted:#777168;       /* soft grey text */
+  --line:#e4ded4;        /* thin borders */
+  --accent:#a65d37;      /* main brand colour (buttons, highlights) */
+  --accent-dark:#814326; /* accent when you hover a button */
+  --soft:#f3e6dc;        /* very light accent tint */
+  --shadow:0 18px 55px rgba(48,37,27,.07);
+  --radius:18px;         /* roundness of big cards */
+}
+/* Same colours for DARK MODE (used when the visitor presses the ◐ button) */
+[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#171614;--surface:#211f1b;--surface-2:#2b2823;
+  --ink:#f2eee7;--muted:#b3aa9e;--line:#3a352e;
+  --accent:#d18a60;--accent-dark:#e4a47d;--soft:#38291f;
+  --shadow:0 18px 55px rgba(0,0,0,.2);
+}
+
+
+/* ==========================================================================
+   2. BASIC PAGE SETTINGS
+   ========================================================================== */
+*{box-sizing:border-box}
+[hidden]{display:none!important}   /* anything marked "hidden" really disappears */
+html{scroll-behavior:smooth;scroll-padding-top:94px}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.7 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+.container{width:min(1120px,calc(100% - 40px));margin-inline:auto}   /* keeps content centred, max 1120px wide */
+section{padding:76px 0}                                              /* vertical space of each section */
+.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:var(--accent);font-weight:750}
+.small-note{font-size:12px;color:var(--muted)}
+
+
+/* ==========================================================================
+   3. HEADER (top bar: logo, menu, theme button, language)
+   ========================================================================== */
+.site-header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 91%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.header-inner{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{display:flex;align-items:center;gap:12px;min-width:max-content}
+.brand-mark{width:42px;height:42px;border-radius:13px;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-weight:800;letter-spacing:-2px;overflow:hidden}
+.brand-mark img{width:100%;height:100%;object-fit:cover;display:block}   /* the logo picture, if you set one */
+.brand-name{font-size:18px;font-weight:500;letter-spacing:-.03em}
+.brand-tag{display:block;color:var(--muted);font-size:11px;letter-spacing:.04em;margin-top:-3px;height:18px;overflow:hidden}
+.tagline-track{display:block;animation:slide-up .7s ease both}
+@keyframes slide-up{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}
+
+.nav{display:flex;align-items:center;gap:22px;margin-left:auto}
+.nav a{font-size:13px;color:var(--muted);transition:color .2s}
+.nav a:hover,.nav a.active{color:var(--accent);font-weight:650}
+
+.header-actions{display:flex;align-items:center;gap:10px;flex:0 0 auto}
+.theme-btn,.menu-btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;width:38px;height:38px;display:grid;place-items:center;cursor:pointer}
+.menu-btn{display:none}   /* the ☰ button only appears on phones (see section 14) */
+.language-control{height:38px;width:154px;min-width:154px;flex:0 0 154px;display:flex;align-items:center;gap:8px;padding:0 10px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);font-size:13px;overflow:hidden;cursor:default}
+.language-label-window{height:20px;min-width:0;flex:1;overflow:hidden;white-space:nowrap}
+.language-label-track{display:block;line-height:20px;animation:slide-up .7s ease both}
+
+
+/* ==========================================================================
+   4. HERO (the big first section)
+   ========================================================================== */
+.hero{padding:100px 0 82px;position:relative;overflow:hidden}
+.hero:before{content:"";position:absolute;width:500px;height:500px;border-radius:50%;right:-180px;top:-250px;background:radial-gradient(circle,var(--soft),transparent 68%);pointer-events:none}
+.hero h1{font-size:clamp(42px,7vw,78px);line-height:1.05;letter-spacing:-.055em;max-width:850px;margin:18px 0}
+.hero h1 span{color:var(--accent)}
+.hero-copy{max-width:610px;color:var(--muted);font-size:17px}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.hero-note{margin-top:52px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:12px;display:flex;gap:10px;align-items:center}
+.dot{width:7px;height:7px;background:var(--accent);border-radius:50%}
+
+
+/* ==========================================================================
+   5. BUTTONS
+   ========================================================================== */
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 19px;border-radius:10px;border:1px solid var(--line);font-size:13px;font-weight:700;transition:transform .2s,background .2s;cursor:pointer}
+.btn:hover{transform:translateY(-2px)}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-primary:hover{background:var(--accent-dark)}
+.btn-secondary{background:var(--surface);color:var(--ink)}
+
+
+/* ==========================================================================
+   6. SECTION HEADINGS
+   ========================================================================== */
+.section-head{margin-bottom:30px;text-align:center}
+.section-head h2{font-size:clamp(29px,4vw,43px);letter-spacing:-.04em;line-height:1.15;margin:9px 0 0}
+.section-head p{max-width:760px;color:var(--muted);margin:14px auto 0}
+.lead{color:var(--muted);max-width:780px;margin:0 auto 24px;text-align:center}
+
+
+/* ==========================================================================
+   7. THE THREE GUILD CARDS
+   ========================================================================== */
+.guild-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.guild-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow);display:flex;flex-direction:column;min-height:270px}
+.guild-number{font-size:11px;color:var(--muted);letter-spacing:.15em}
+.guild-card h3{font-size:27px;letter-spacing:-.04em;margin:28px 0 8px}
+.guild-card p{color:var(--muted);font-size:14px;margin:0 0 20px}
+.card-link{margin-top:auto;align-self:flex-start;color:var(--accent);font-size:13px;font-weight:750;background:var(--surface);border:1px solid var(--accent);border-radius:10px;padding:10px 14px;text-align:center;cursor:pointer;transition:background .2s,color .2s}
+.card-link:hover{background:var(--accent);color:#fff}
+
+
+/* ==========================================================================
+   8. GUILD DETAIL PANELS (opens under the cards: tabs + content)
+   ========================================================================== */
+.guild-details{display:none;margin-top:28px;border:1px solid var(--line);border-radius:20px;background:var(--surface);box-shadow:var(--shadow);overflow:hidden}
+.guild-details.active{display:block;animation:panel-in .35s ease both}
+@keyframes panel-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+.detail-top{padding:30px 32px;background:var(--surface-2);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:center;gap:20px;text-align:center}
+.detail-top h3{font-size:clamp(26px,4vw,38px);letter-spacing:-.04em;margin:5px 0}
+.detail-top p{color:var(--muted);max-width:680px;margin:0 auto}
+.close-detail{border:1px solid var(--line);background:var(--surface);color:var(--ink);width:36px;height:36px;border-radius:10px;cursor:pointer;flex:none}
+
+.detail-tabs{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:18px 28px;border-bottom:1px solid var(--line);background:var(--surface)}
+.tab-btn{border:1px solid var(--line);background:var(--surface);color:var(--muted);padding:9px 15px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer}
+.tab-btn.active,.tab-btn:hover{background:var(--soft);border-color:var(--accent);color:var(--accent)}
+
+/* Everything inside a tab is left-aligned */
+.detail-content{padding:28px 30px 34px;min-height:220px;text-align:left}
+.detail-pane{display:none}
+.detail-pane.active{display:block;animation:panel-in .25s ease both}
+.detail-pane h4{font-size:20px;margin:0 0 8px}
+.detail-pane .lead{text-align:left;margin:0 0 24px}
+
+
+/* ==========================================================================
+   9. INFO BOXES USED INSIDE TABS AND IN GUILD NORMS
+   ========================================================================== */
+.content-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.rule{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:19px 20px;text-align:left}
+.rule h3{font-size:14px;margin:0 0 7px}
+.rule p,.rule li{font-size:13px;color:var(--muted)}
+.rule p{margin:0}
+.rule ul{margin:8px 0 0;padding-left:19px}
+.rule li+li{margin-top:4px}
+.callout{background:var(--soft);border:1px solid var(--line);border-radius:16px;padding:22px;margin-top:18px;text-align:left}
+.callout strong{color:var(--accent)}
+.callout ul{padding-left:19px}
+
+/* GUILD GOALS list (used by BΛSE, ΛRISE and OVERDRIVE — all three look the same now) */
+.goal-list{display:grid;gap:12px}
+.goal{display:grid;grid-template-columns:38px 1fr;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;text-align:left}
+.goal-num{width:34px;height:34px;border-radius:50%;background:var(--soft);color:var(--accent);display:grid;place-items:center;font-size:12px;font-weight:800}
+.goal h3{font-size:14px;margin:0 0 4px}
+.goal p{font-size:13px;color:var(--muted);margin:0}
+.pill-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.pill{background:var(--surface-2);border:1px solid var(--line);padding:6px 10px;border-radius:999px;font-size:12px}
+
+
+/* ==========================================================================
+   10. GUILD NORMS SECTION
+   ========================================================================== */
+.norms-section{border-top:1px solid var(--line)}
+.norms-head{text-align:center}
+.norms-head h2{font-size:clamp(29px,4vw,43px);letter-spacing:-.04em;margin:9px 0 12px}
+
+
+/* ==========================================================================
+   11. PEOPLE CARDS (members + leaders) AND LEADERSHIP GRID
+   ========================================================================== */
+.member-card{flex:0 0 280px;background:var(--surface);border:1px solid var(--line);border-radius:15px;padding:18px;min-width:0;text-align:left}
+.member-card.is-leader{border-color:var(--accent)}              /* GM / VGM cards get an accent border */
+.member-photo{height:170px;border-radius:11px;background:var(--surface-2);overflow:hidden;margin-bottom:14px}
+.member-photo img{width:100%;height:100%;object-fit:cover;display:block;-webkit-user-drag:none;user-select:none}
+.member-card .role{font-size:11px;text-transform:uppercase;letter-spacing:.13em;color:var(--accent);font-weight:750}
+.member-card h4{font-size:15px;margin:3px 0}
+.member-card p{font-size:12px;color:var(--muted);margin:7px 0 12px}
+.member-card .member-review{font-style:italic;color:var(--accent);border-left:2px solid var(--accent);padding-left:9px}
+.member-links{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;font-weight:700;color:var(--accent)}
+.empty-note{font-size:13px;color:var(--muted);margin:12px 0}
+
+/* "Leadership" tab: GM and VGM cards in a grid */
+.leader-grid{display:grid;grid-template-columns:repeat(2,minmax(220px,1fr));gap:14px}
+.leader-grid .member-card{flex:none}
+.leader-grid .member-photo{height:220px}
+
+
+/* ==========================================================================
+   12. MEMBER CAROUSELS (slow continuous sideways loop)
+   ========================================================================== */
+.member-carousel{position:relative;margin-top:14px}
+.member-window{overflow:hidden;touch-action:pan-y;cursor:grab}          /* the visible "frame" */
+.member-window.dragging{cursor:grabbing}
+.member-track{display:flex;gap:14px;width:max-content;will-change:transform}   /* the moving strip of cards */
+.all-members-section{padding-top:56px}
+.member-controls{display:flex;justify-content:flex-end;align-items:center;gap:7px;margin-top:12px}
+.carousel-btn{display:inline-grid;place-items:center;flex:0 0 34px;width:34px;height:34px;min-width:34px;padding:0;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;line-height:1;font-family:Arial,sans-serif;font-size:19px;font-weight:500}
+.carousel-btn:hover{border-color:var(--accent);color:var(--accent)}
+.carousel-btn.play-toggle{font-size:14px;font-weight:700}
+
+
+/* ==========================================================================
+   13. GUILD MOMENTS SLIDESHOWS
+   ========================================================================== */
+.guild-slideshow{margin:18px 28px 0;border:1px solid var(--line);border-radius:16px;background:var(--surface);overflow:hidden;min-height:270px}
+.community-showcase{padding:64px 0}
+.community-showcase .guild-slideshow{margin:0}
+.guild-slide{display:grid;grid-template-columns:minmax(220px,.82fr) 1.18fr;height:270px}
+.guild-slide-image{width:100%;height:270px;object-fit:cover;background:var(--surface-2);display:block}
+.guild-slide-image.no-image{background:linear-gradient(135deg,var(--soft),var(--surface-2))}   /* shown when a picture is missing */
+.guild-slide-copy{height:270px;padding:22px 24px;display:flex;flex-direction:column;align-items:flex-start;text-align:left;min-width:0;overflow:hidden}
+.guild-slide-kicker{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);font-weight:800}
+.guild-slide-copy h4{font-size:20px;margin:7px 0 8px}
+.guild-slide-description{font-size:13px;color:var(--muted);margin:0;line-height:1.55;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;max-height:4.65em;min-height:4.65em}
+.guild-slide-description.expanded{display:block;overflow:auto;padding-right:5px}
+.guild-slide-more{border:0;background:transparent;padding:0;margin-top:5px;font-size:11px;color:var(--accent);font-weight:750;cursor:pointer}
+.guild-slide-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:13px}
+.guild-slide-links:empty{display:none}
+.guild-slide-links a{font-size:11px;font-weight:750;padding:7px 11px;border:1px solid var(--line);border-radius:9px;color:var(--accent)}
+.guild-slide-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;margin-top:12px}
+.guild-slide-dots{display:flex;gap:5px}
+.guild-slide-dot{width:6px;height:6px;border-radius:50%;background:var(--line)}
+.guild-slide-dot.active{background:var(--accent)}
+.guild-slide-controls{display:flex;align-items:center;gap:7px}
+.guild-slide-controls button{display:inline-grid;place-items:center;flex:0 0 34px;width:34px;height:34px;min-width:34px;padding:0;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--ink);cursor:pointer;line-height:1;font-family:Arial,sans-serif;font-size:19px}
+.guild-slide-controls button[data-act="play"]{font-size:14px;font-weight:700}
+
+
+/* ==========================================================================
+   14. CALL-TO-ACTION BOX, SUPPORT LINE AND FOOTER
+   ========================================================================== */
+.cta{padding:65px 0}
+.cta-inner{background:var(--ink);color:var(--bg);border-radius:22px;padding:42px;display:flex;justify-content:space-between;align-items:center;gap:25px}
+.cta h2{font-size:clamp(28px,4vw,42px);letter-spacing:-.04em;line-height:1.1;margin:8px 0}
+.cta p{color:color-mix(in srgb,var(--bg) 68%,transparent);max-width:500px;margin:0}
+.cta .support-line{margin-top:12px;font-size:13px}
+.cta .support-line a{color:var(--accent);font-weight:700}
+.cta .eyebrow{color:var(--accent)}
+.cta .btn{background:var(--bg);color:var(--ink);border-color:var(--bg);white-space:nowrap}
+footer{border-top:1px solid var(--line);padding:26px 0;color:var(--muted);font-size:12px}
+.footer-inner{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+footer a{color:var(--accent)}
+
+
+/* ==========================================================================
+   15. PHONE / SMALL SCREEN LAYOUT
+   ========================================================================== */
+@media(max-width:850px){
+  .nav{gap:13px}.nav a{font-size:12px}
+  .member-card{flex-basis:250px}
+}
+@media(max-width:700px){
+  .container{width:min(100% - 30px,600px)}
+  .header-inner{min-height:68px}
+  .menu-btn{display:grid}
+  .language-control{width:132px;min-width:132px;flex-basis:132px}
+  .nav{display:none;position:absolute;left:15px;right:15px;top:68px;margin-left:0;padding:15px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);flex-direction:column;align-items:stretch;gap:0}
+  .nav.open{display:flex}
+  .nav a{padding:11px 8px;font-size:14px}
+  .hero{padding:75px 0 60px}.hero-copy{font-size:15px}
+  section{padding:58px 0}
+  .guild-grid,.content-grid,.leader-grid{grid-template-columns:1fr}
+  .guild-card{min-height:220px}
+  .detail-top{padding:23px 20px}.detail-tabs{padding:14px 18px}.detail-content{padding:22px 18px}
+  .member-card{flex-basis:230px}.member-photo{height:190px}
+  .guild-slideshow{margin:14px 14px 0;min-height:410px}
+  .guild-slide{grid-template-columns:1fr;height:410px}
+  .guild-slide-image{height:170px}
+  .guild-slide-copy{height:240px;padding:18px}
+  .community-showcase{padding:48px 0}
+  .cta-inner{display:block;padding:30px 24px}.cta .btn{margin-top:22px}
+}
+
+/* Visitors who asked their device for less motion get no animations */
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*:before,*:after{transition:none!important;animation:none!important}
+}

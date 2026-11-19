@@ -1,0 +1,345 @@
+<!doctype html>
+<!-- ==========================================================================
+     index.html  —  THE TEXT AND STRUCTURE OF THE PAGE
+     --------------------------------------------------------------------------
+     FILES THAT MAKE THE WEBSITE (keep them all in the SAME folder):
+       index.html  (this file)  words and layout of the page
+       style.css                colours, sizes, spacing
+       script.js                the moving parts (buttons, carousels, slideshows)
+       config.js                Discord link, name prefix, speeds, on/off switches
+       images.js                ALL image links (logo, leaders, members, moments)
+       leaders.js               Guild Masters / Vice Guild Masters
+       members.js               Member list
+       slides.js                "Guild moments" slideshow text
+
+     YOU CAN EDIT HERE:
+       - Any normal sentence you see between tags, e.g.  <p>Edit this sentence</p>
+       - Guild goals, rules, joining steps, guild norms.
+     DO NOT DELETE:
+       - Anything inside < > that has  id="..."  or  data-...="..."  — the buttons and
+         carousels use them to find their place.
+     Capital "A" is turned into "Λ" automatically everywhere (see config.js), so you can
+     type normal A while editing if you like.
+     ========================================================================== -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f6f3ee">
+<meta name="description" content="Discover ΛNΛNTYΛ Guilds: BΛSE, ΛRISE and OVERDRIVE. Find your guild, read our norms and goals, and apply to join.">
+<title>ΛNΛNTYΛ Guilds — Belong to Infinity</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ==================== HEADER (top bar) ==================== -->
+<header class="site-header">
+ <div class="container header-inner">
+  <a class="brand" href="#home" aria-label="ΛNΛNTYΛ Guilds home">
+   <!-- The small "ΛN" box. If you set a logo in images.js it is replaced by your logo picture. -->
+   <span class="brand-mark" id="brandMark">ΛN</span>
+   <span><span class="brand-name">ΛNΛNTYΛ Guilds</span><span class="brand-tag"><span id="tagline" class="tagline-track">Belong to Infinity</span></span></span>
+  </a>
+  <!-- Menu links. The "Discord" link address comes from config.js (data-discord). -->
+  <nav class="nav" id="siteNav" aria-label="Main navigation">
+   <a href="#guilds">Guilds</a>
+   <a href="#norms">Guild Norms</a>
+   <a href="#join">Join Us</a>
+   <a href="#" data-discord>Discord</a>
+  </nav>
+  <div class="header-actions">
+   <button class="theme-btn" id="themeToggle" type="button" aria-label="Toggle colour theme" title="Toggle theme">◐</button>
+   <!-- This box changes language automatically; it is not a button. Languages are listed in script.js. -->
+   <div class="language-control" aria-live="polite" aria-label="Automatically changing language"><span aria-hidden="true">🌐</span><span class="language-label-window"><span id="languageName" class="language-label-track">English</span></span></div>
+   <button class="menu-btn" id="menuToggle" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
+  </div>
+ </div>
+</header>
+
+<main id="home">
+
+ <!-- ==================== HERO (first big section) ==================== -->
+ <div class="container hero">
+  <div class="eyebrow">Three guilds · One home</div>
+  <h1>More than a guild.<br><span>Λ place to belong.</span></h1>
+  <p class="hero-copy">ΛNΛNTYΛ brings players together through games, shared experiences and teamwork. Find your place across BΛSE, ΛRISE and OVERDRIVE.</p>
+  <div class="actions">
+   <a class="btn btn-primary" href="#" data-discord>Join our Discord</a>
+   <a class="btn btn-secondary" href="#guilds">Explore our guilds</a>
+  </div>
+  <div class="hero-note"><span class="dot"></span> Λn international gaming community built around connection and growth.</div>
+ </div>
+
+ <!-- ==================== THE THREE GUILDS ==================== -->
+ <section id="guilds">
+  <div class="container">
+   <div class="section-head"><div><div class="eyebrow">Find your place</div><h2>Meet ΛNΛNTYΛ Guilds</h2></div><p>We have three guilds, each with a different purpose and game focus. Choose a guild to explore its information, goals, recruitment, leadership and members.</p></div>
+
+   <!-- The three cards. The "data-open-guild" word (base / arise / overdrive) decides which panel opens. -->
+   <div class="guild-grid">
+    <article class="guild-card"><div class="guild-number">01 / COMMUNITY</div><h3>BΛSE</h3><p>The common space for everyone, whatever games you play. Connect, chat, join activities and meet other members.</p><button class="card-link" type="button" data-open-guild="base">Explore BΛSE</button></article>
+    <article class="guild-card"><div class="guild-number">02 / SOLO LEVELING: ΛRISE</div><h3>ΛRISE</h3><p>Λ dedicated guild for Solo Leveling: ΛRISE players, with three sub-guilds, progression ranks and weekly goals.</p><button class="card-link" type="button" data-open-guild="arise">Explore ΛRISE</button></article>
+    <article class="guild-card"><div class="guild-number">03 / SOLO LEVELING: ΛRISE OVERDRIVE</div><h3>OVERDRIVE</h3><p>Λ space for OVERDRIVE players, working with our partner guild CRIMSON SHΛDOWS.</p><button class="card-link" type="button" data-open-guild="overdrive">Explore OVERDRIVE</button></article>
+   </div>
+
+
+   <!-- ##################################################################
+        PANEL 1: BΛSE   (opens when "Explore BΛSE" is pressed)
+        Each panel has 5 tabs: About, Guild Goals, Apply to Join, Leadership, Members.
+        Tab buttons and tab content are linked by the same name (data-tab = id).
+        ################################################################## -->
+   <div class="guild-details" id="details-base" aria-live="polite">
+    <div class="detail-top"><div><div class="eyebrow">01 / Community guild</div><h3>BΛSE</h3><p>The common space for everyone, regardless of the games they play. Connect, chat and take part in server-wide activities.</p></div><button class="close-detail" type="button" aria-label="Close guild details">✕</button></div>
+    <div class="detail-tabs" role="tablist" aria-label="BΛSE information">
+     <button class="tab-btn active" data-tab="base-about" role="tab" aria-selected="true">Λbout BΛSE</button>
+     <button class="tab-btn" data-tab="base-goals" role="tab" aria-selected="false">Guild Goals</button>
+     <button class="tab-btn" data-tab="base-recruit" role="tab" aria-selected="false">Apply to Join</button>
+     <button class="tab-btn" data-tab="base-leaders" role="tab" aria-selected="false">Leadership</button>
+     <button class="tab-btn" data-tab="base-members" role="tab" aria-selected="false">Members</button>
+    </div>
+    <!-- Slideshow filled by script.js from slides.js (guild = base) -->
+    <div class="guild-slideshow" data-slideshow-guild="base" aria-live="polite"></div>
+    <div class="detail-content">
+
+     <!-- TAB: About -->
+     <div class="detail-pane active" id="base-about"><h4>What is BΛSE?</h4><p class="lead">BΛSE is the shared home for all ΛNΛNTYΛ members. You do not need to play a specific game or meet game-related requirements to be part of it.</p>
+      <div class="content-grid">
+       <article class="rule"><h3>Open to everyone</h3><p>Λll members can interact and collaborate here beyond their individual game communities.</p></article>
+       <article class="rule"><h3>Λctivities</h3><p>Join bot games, server events, role management, off-topic discussions, media sharing and voice chats.</p></article>
+       <article class="rule"><h3>No rank system</h3><p>BΛSE does not have a rank or level system.</p></article>
+       <article class="rule"><h3>Λ shared space</h3><p>Meet people, share your interests and take part in the wider ΛNΛNTYΛ community.</p></article>
+      </div></div>
+
+     <!-- TAB: Guild Goals. One block "goal" = one numbered row. Copy a block to add a goal. -->
+     <div class="detail-pane" id="base-goals"><h4>BΛSE — Community goals</h4><p class="lead">There are no game-specific requirements or rank targets in BΛSE. We simply encourage everyone to take part and help keep the community active.</p>
+      <div class="goal-list">
+       <div class="goal"><span class="goal-num">01</span><div><h3>Participate in Server Events</h3><p>Take part in events, activities and competitions organised across the server.</p></div></div>
+       <div class="goal"><span class="goal-num">02</span><div><h3>Stay Λctive</h3><p>Join conversations and interact with other members.</p></div></div>
+       <div class="goal"><span class="goal-num">03</span><div><h3>Explore and Share Games</h3><p>Try different games, share your gaming experiences, and post screenshots, gameplay clips, achievements or interesting moments.</p></div></div>
+       <div class="goal"><span class="goal-num">04</span><div><h3>Be Part of the Community</h3><p>Participate in bot games, discussions and other server activities.</p></div></div>
+       <div class="goal"><span class="goal-num">05</span><div><h3>Join Voice Chats</h3><p>Hang out, play together and interact with other members whenever possible.</p></div></div>
+       <div class="goal"><span class="goal-num">06</span><div><h3>Help Other Members</h3><p>Share useful information, answer questions and help newcomers feel welcome.</p></div></div>
+      </div>
+      <div class="callout"><strong>Remember:</strong> BΛSE has no strict activity targets or contribution requirements. The goal is simply to build an active, friendly and connected community.</div></div>
+
+     <!-- TAB: Apply to Join. The button link comes from config.js. -->
+     <div class="detail-pane" id="base-recruit"><h4>BΛSE — Apply to Join</h4><p class="lead">To join BΛSE and unlock full server access, join our Discord and submit the following in the application channel.</p>
+      <div class="content-grid">
+       <article class="rule"><h3>What to submit</h3><ul><li>Your full in-game Profile Page from any game.</li></ul></article>
+       <article class="rule"><h3>Screenshot requirements</h3><ul><li>Your in-game name must be clearly visible.</li><li>Relevant game stats must be visible.</li><li>Show your complete profile page clearly.</li></ul></article>
+      </div>
+      <div class="actions"><a class="btn btn-primary" href="#" data-discord>Apply to Join</a></div></div>
+
+     <!-- TAB: Leadership. Cards are created by script.js from leaders.js (guild = base). -->
+     <div class="detail-pane" id="base-leaders"><h4>BΛSE — Leadership</h4><p class="lead">Meet the people responsible for managing BΛSE and supporting its members.</p>
+      <div class="leader-grid" data-leaders="base"></div></div>
+
+     <!-- TAB: Members. Rolling carousel; "base" shows EVERY member and leader, randomly mixed. -->
+     <div class="detail-pane" id="base-members"><h4>BΛSE — Members</h4><p class="lead">Meet the members who make BΛSE an active and welcoming place.</p>
+      <div class="member-carousel" data-carousel="base">
+       <div class="member-window"><div class="member-track"></div></div>
+       <div class="member-controls"><button class="carousel-btn prev" type="button" aria-label="Previous members">‹</button><button class="carousel-btn play-toggle" type="button" aria-label="Pause member slideshow">Ⅱ</button><button class="carousel-btn next" type="button" aria-label="Next members">›</button></div>
+      </div></div>
+
+    </div>
+   </div>
+
+
+   <!-- ##################################################################
+        PANEL 2: ΛRISE
+        ################################################################## -->
+   <div class="guild-details" id="details-arise" aria-live="polite">
+    <div class="detail-top"><div><div class="eyebrow">02 / Solo Leveling: ΛRISE</div><h3>ΛRISE</h3><p>Λ dedicated guild for Solo Leveling: ΛRISE players, with three sub-guilds, organised progression and weekly Guild Goals.</p></div><button class="close-detail" type="button" aria-label="Close guild details">✕</button></div>
+    <div class="detail-tabs" role="tablist" aria-label="ΛRISE information">
+     <button class="tab-btn active" data-tab="arise-about" role="tab" aria-selected="true">Λbout ΛRISE</button>
+     <button class="tab-btn" data-tab="arise-goals" role="tab" aria-selected="false">Guild Goals</button>
+     <button class="tab-btn" data-tab="arise-recruit" role="tab" aria-selected="false">Apply to Join</button>
+     <button class="tab-btn" data-tab="arise-leaders" role="tab" aria-selected="false">Leadership</button>
+     <button class="tab-btn" data-tab="arise-members" role="tab" aria-selected="false">Members</button>
+    </div>
+    <div class="guild-slideshow" data-slideshow-guild="arise" aria-live="polite"></div>
+    <div class="detail-content">
+
+     <div class="detail-pane active" id="arise-about"><h4>What is ΛRISE?</h4><p class="lead">ΛRISE is dedicated to Solo Leveling: ΛRISE players. It has three sub-guilds and follows a rank and level system, with weekly Guild Goals that members are expected to achieve.</p>
+      <div class="content-grid">
+       <article class="rule"><h3>Game-focused channels</h3><p>Some channels are visible only to members who have enrolled in ΛRISE, played the game and verified their in-game profiles.</p></article>
+       <article class="rule"><h3>Three sub-guilds</h3><p>Members are assigned to one of three sub-guilds based on their game stats and progression.</p></article>
+       <article class="rule"><h3>Weekly progression</h3><p>Members are expected to meet the weekly Guild Goals and maintain their progress.</p></article>
+       <article class="rule"><h3>Team contribution</h3><p>Complete missions, participate in Guild Boss and mini-games, and stay updated with weekly requirements.</p></article>
+      </div></div>
+
+     <div class="detail-pane" id="arise-goals"><h4>ΛRISE — Weekly Guild Goals</h4><p class="lead">Members are expected to complete the following requirements every week.</p>
+      <div class="goal-list">
+       <div class="goal"><span class="goal-num">01</span><div><h3>Λchieve Guild Mission Contribution Points</h3><p>Log in daily and complete all Daily, Weekly, Guild Daily and Guild Weekly Missions. Successfully completing these missions gives 1870 Guild Mission Contribution Points.</p><div class="pill-row"><span class="pill">Deadline: Wednesday, 18:31 UTC</span><span class="pill">Target: 1870 points</span></div></div></div>
+       <div class="goal"><span class="goal-num">02</span><div><h3>Participate in Guild Boss</h3><p>Play both Group 1 and Group 2 of Guild Boss and meet your sub-guild's required Rage Count every week.</p><div class="pill-row"><span class="pill">ΛNΛNTYΛ — 269+</span><span class="pill">2ΛNΛNTYΛ — 69+</span><span class="pill">3ΛNΛNTYΛ — 69+</span><span class="pill">Deadline: Tuesday, 18:31 UTC</span></div></div></div>
+       <div class="goal"><span class="goal-num">03</span><div><h3>Participate in Mini-Games</h3><p>Play the required mini-games and earn the specified points within the deadline.</p><div class="pill-row"><span class="pill">Tidy Up the Warehouse! — 100 points</span><span class="pill">Λnxious Tank Stacking — 200 points</span><span class="pill">Deadline: Wednesday, 18:31 UTC</span></div></div></div>
+       <div class="goal"><span class="goal-num">04</span><div><h3>Stay Updated with Guild Goals</h3><p>Keep track of weekly requirements, deadlines and changes to guild policies or goals. Follow the Guild Guide to achieve the highest score in required modes.</p></div></div>
+       <div class="goal"><span class="goal-num">05</span><div><h3>Failure Policy</h3><p>Failure to meet the required goals may result in removal from the guild, either immediately or when a replacement is ready. If you have issues or concerns, contact the Guild Master, Vice Guild Masters or guild personnel through Discord.</p></div></div>
+      </div>
+      <div class="callout"><strong>How to check your points</strong>
+       <p class="small-note">Guild Boss Contribution Points = [(Rage Count × 10) + 255] × P. Set P = 1 if Guild Boss has been played, or P = 0 if it has not been played.</p>
+       <p class="small-note">Guild Mission Contribution Points = Total Guild Contribution Points − Guild Boss Contribution Points.</p>
+       <p class="small-note">To find your total points: Guild Lobby → Guild Menu → Guild Information → Guild Member → find your name. Your total points appear beside it.</p></div></div>
+
+     <div class="detail-pane" id="arise-recruit"><h4>ΛRISE — Apply to Join</h4><p class="lead">Join our Discord, open the application channel and submit clear screenshots for evaluation.</p>
+      <div class="content-grid">
+       <article class="rule"><h3>What to submit</h3><ul><li>Your full in-game Profile Page.</li><li>Custom Draw Banner — full Hunter and Weapon List.</li><li>Your Battle Tier Page.</li><li>One screenshot of your total Guild Boss Rage Count.</li></ul></article>
+       <article class="rule"><h3>Requirements</h3><ul><li>Show your In-Game Name, Tag Code, Level and Battle Tier.</li><li>Make sure every screenshot is clear and readable.</li><li>Λfter evaluation, you will be assigned to the sub-guild that best matches your game stats.</li></ul></article>
+      </div>
+      <div class="actions"><a class="btn btn-primary" href="#" data-discord>Apply to Join</a></div></div>
+
+     <div class="detail-pane" id="arise-leaders"><h4>ΛRISE — Leadership</h4><p class="lead">Meet the people responsible for managing ΛRISE and supporting its members.</p>
+      <div class="leader-grid" data-leaders="arise"></div></div>
+
+     <!-- "arise" carousel shows only ΛRISE members + ΛRISE leaders, randomly mixed -->
+     <div class="detail-pane" id="arise-members"><h4>ΛRISE — Members</h4><p class="lead">Meet the players who make up our three ΛRISE sub-guilds.</p>
+      <div class="member-carousel" data-carousel="arise">
+       <div class="member-window"><div class="member-track"></div></div>
+       <div class="member-controls"><button class="carousel-btn prev" type="button" aria-label="Previous members">‹</button><button class="carousel-btn play-toggle" type="button" aria-label="Pause member slideshow">Ⅱ</button><button class="carousel-btn next" type="button" aria-label="Next members">›</button></div>
+      </div></div>
+
+    </div>
+   </div>
+
+
+   <!-- ##################################################################
+        PANEL 3: OVERDRIVE
+        ################################################################## -->
+   <div class="guild-details" id="details-overdrive" aria-live="polite">
+    <div class="detail-top"><div><div class="eyebrow">03 / Solo Leveling: ΛRISE OVERDRIVE</div><h3>OVERDRIVE</h3><p>Our space for Solo Leveling: ΛRISE OVERDRIVE players, working in collaboration with our partner guild CRIMSON SHΛDOWS.</p></div><button class="close-detail" type="button" aria-label="Close guild details">✕</button></div>
+    <div class="detail-tabs" role="tablist" aria-label="OVERDRIVE information">
+     <button class="tab-btn active" data-tab="overdrive-about" role="tab" aria-selected="true">Λbout OVERDRIVE</button>
+     <button class="tab-btn" data-tab="overdrive-goals" role="tab" aria-selected="false">Guild Goals</button>
+     <button class="tab-btn" data-tab="overdrive-recruit" role="tab" aria-selected="false">Apply to Join</button>
+     <button class="tab-btn" data-tab="overdrive-leaders" role="tab" aria-selected="false">Leadership</button>
+     <button class="tab-btn" data-tab="overdrive-members" role="tab" aria-selected="false">Members</button>
+    </div>
+    <div class="guild-slideshow" data-slideshow-guild="overdrive" aria-live="polite"></div>
+    <div class="detail-content">
+
+     <div class="detail-pane active" id="overdrive-about"><h4>What is OVERDRIVE?</h4><p class="lead">OVERDRIVE is dedicated to Solo Leveling: ΛRISE OVERDRIVE players and works in collaboration with our partner guild, CRIMSON SHΛDOWS.</p>
+      <div class="content-grid">
+       <article class="rule"><h3>Our partner guild</h3><p>CRIMSON SHΛDOWS has its own rules, goals and joining criteria.</p></article>
+       <article class="rule"><h3>Guidance and support</h3><p>We act as a bridge between our community and their guild, helping members connect with them and receive guidance in the game.</p></article>
+      </div></div>
+
+     <!-- Guild Goals now uses the SAME numbered style as BΛSE and ΛRISE -->
+     <div class="detail-pane" id="overdrive-goals"><h4>OVERDRIVE — Guild expectations</h4><p class="lead">These expectations apply to members who join our OVERDRIVE partner guild, CRIMSON SHΛDOWS.</p>
+      <div class="goal-list">
+       <div class="goal"><span class="goal-num">01</span><div><h3>Respect Other Members</h3><p>Treat all guild members with respect. Toxic behaviour, unnecessary arguments and conflicts will not be tolerated.</p></div></div>
+       <div class="goal"><span class="goal-num">02</span><div><h3>Use the Guild Tag</h3><p>Λll members must include the guild tag in their Discord name: <strong>{CS} YourName</strong>.</p></div></div>
+       <div class="goal"><span class="goal-num">03</span><div><h3>Stay Λctive</h3><p>Remain active and participate in guild activities. If you need to be inactive for an extended period, inform the guild leadership.</p></div></div>
+       <div class="goal"><span class="goal-num">04</span><div><h3>Participate in Guild Nights</h3><p>Λ shared Guild Night is organised once every week. Participation is expected from all members.</p></div></div>
+       <div class="goal"><span class="goal-num">05</span><div><h3>Support Your Teammates</h3><p>Help fellow players, cooperate with guild members and work together during guild activities.</p></div></div>
+       <div class="goal"><span class="goal-num">06</span><div><h3>Λvoid Unacceptable Behaviour</h3><p>Toxic behaviour, spamming, unnecessary drama, disrespect, disrupting or sabotaging activities, and being unreliable during organised events are not allowed.</p></div></div>
+       <div class="goal"><span class="goal-num">07</span><div><h3>Failure Policy</h3><p>Violating guild rules may result in warnings, loss of rank or removal from the guild, depending on the situation.</p></div></div>
+       <div class="goal"><span class="goal-num">08</span><div><h3>Our Goal</h3><p>Build a strong, loyal and organised community. <strong>Grow Together. Fight Together. Dominate Together.</strong></p></div></div>
+      </div></div>
+
+     <div class="detail-pane" id="overdrive-recruit"><h4>OVERDRIVE — Apply to Join</h4><p class="lead">Join our Discord and submit your profile. We will share it with CRIMSON SHΛDOWS and guide you through their joining process.</p>
+      <div class="content-grid">
+       <article class="rule"><h3>What to submit</h3><ul><li>Your full in-game Profile Page.</li></ul></article>
+       <article class="rule"><h3>What your profile must show</h3><ul><li>Your In-Game Name, Tag Code, Level and Battle Tier.</li><li>Make sure the screenshot is clear and readable.</li></ul></article>
+      </div>
+      <div class="callout"><strong>Λ glimpse of CRIMSON SHΛDOWS' joining criteria</strong>
+       <ul><li><strong>Minimum Level:</strong> 75</li><li><strong>E-Rank Exam:</strong> Mandatory once you reach Level 75.</li><li><strong>Weekly Payment:</strong> Members must pay their respective rank income as operating costs.</li></ul>
+       <p class="small-note">You may also be asked about your activity, previous guild experience, why you want to join CRIMSON SHΛDOWS and whether you are willing to fulfil its requirements. Please answer honestly and completely.</p>
+       <p class="small-note">You will remain in our OVERDRIVE section regardless of CRIMSON SHΛDOWS' final decision.</p></div>
+      <div class="actions"><a class="btn btn-primary" href="#" data-discord>Apply to Join</a></div></div>
+
+     <div class="detail-pane" id="overdrive-leaders"><h4>OVERDRIVE — Leadership</h4><p class="lead">Meet the people who coordinate OVERDRIVE and help members connect with our partner guild.</p>
+      <div class="leader-grid" data-leaders="overdrive"></div></div>
+
+     <div class="detail-pane" id="overdrive-members"><h4>OVERDRIVE — Members</h4><p class="lead">Meet the players in our OVERDRIVE community.</p>
+      <div class="member-carousel" data-carousel="overdrive">
+       <div class="member-window"><div class="member-track"></div></div>
+       <div class="member-controls"><button class="carousel-btn prev" type="button" aria-label="Previous members">‹</button><button class="carousel-btn play-toggle" type="button" aria-label="Pause member slideshow">Ⅱ</button><button class="carousel-btn next" type="button" aria-label="Next members">›</button></div>
+      </div></div>
+
+    </div>
+   </div>
+  </div>
+ </section>
+
+
+ <!-- ==================== GUILD NORMS (rules for everyone) ==================== -->
+ <section class="norms-section" id="norms">
+  <div class="container">
+   <div class="norms-head"><div class="eyebrow">Community standards</div><h2>Guild Norms</h2></div>
+   <p class="lead">These rules apply to everyone, regardless of which guild or sub-guild they belong to. Λll members are expected to follow them.</p>
+   <div class="content-grid">
+    <article class="rule"><h3>01. Respect Other Members</h3><ul><li>Do not harass, bully, insult or target other members.</li><li>Hate speech, discrimination and personal attacks are not allowed.</li><li>Do not share anyone's private or personal information without permission.</li></ul></article>
+    <article class="rule"><h3>02. Keep Content Λppropriate</h3><p>Game-related character images, including bikini outfits, revealing costumes and fan service, are allowed. Light double-meaning jokes and suggestive humour are also allowed when not directed at or used to harass someone. Nudity, sexually explicit images, pornography and overly graphic sexual material are prohibited.</p></article>
+    <article class="rule"><h3>03. No Spamming</h3><ul><li>Λvoid repeated or unnecessary messages.</li><li>Do not spam bot commands, misuse tags or repeatedly switch voice channels.</li><li>Λvoid tagging people who are not part of the conversation without a valid reason.</li></ul></article>
+    <article class="rule"><h3>04. No Cheating or Exploits</h3><p>Do not promote hacks, cheats, unauthorised programs or exploits to gain unfair advantages. Do not share methods for abusing game bugs or glitches for personal gain.</p></article>
+    <article class="rule"><h3>05. Use the Correct Channels</h3><p>Keep conversations in relevant channels, follow channel language guidelines and check channel topics and pinned messages. Repeatedly ignoring guidelines may result in restricted channel access.</p></article>
+    <article class="rule"><h3>06. Λppropriate Nicknames</h3><p>Do not use offensive, inappropriate or unreadable nicknames. Λvoid excessive or unusual Unicode characters. Λdmins and moderators may change nicknames when necessary.</p></article>
+    <article class="rule"><h3>07. No Unauthorised Λdvertising</h3><p>Do not advertise other Discord servers, companies, products or services without permission. Commercial promotions and unrelated advertisements are not allowed.</p></article>
+    <article class="rule"><h3>08. No Impersonation</h3><p>Do not pretend to be another member, an admin, a moderator or a server bot. Do not use names or profiles intended to mislead others.</p></article>
+    <article class="rule"><h3>09. No Λccount Trading</h3><p>Buying, selling or trading game accounts or game-related content is not allowed. Follow the game's official account and trading policies.</p></article>
+    <article class="rule"><h3>10. Respect Copyright</h3><p>Do not share copyrighted content without permission when doing so violates the owner's rights. Give proper credit when sharing someone else's artwork or creations.</p></article>
+    <article class="rule"><h3>11. Λdmin and Moderator Rights</h3><p>Λdmins and moderators may delete messages, edit posts, issue warnings, restrict permissions or remove members when necessary. Cooperate with staff if they contact you about a rule violation.</p></article>
+    <article class="rule"><h3>12. Follow Platform and Game Policies</h3><p>Λll members must follow Discord's Community Guidelines and Terms of Service, as well as the rules and policies set by the respective game publishers. Violations may result in action under Rule 11.</p></article>
+   </div>
+   <div class="callout"><strong>Important:</strong> These rules may be updated whenever necessary. Λdmins and moderators reserve the right to take action against behaviour that harms the server or its members, even if a specific situation is not directly mentioned above.</div>
+  </div>
+ </section>
+
+
+ <!-- ==================== MEET OUR COMMUNITY (main-page carousel) ====================
+      Shows EVERYONE: all members + all GMs/VGMs of every guild, randomly mixed. -->
+ <section class="all-members-section" id="community-members">
+  <div class="container">
+   <div class="section-head">
+    <div><div class="eyebrow">The people behind the guilds</div><h2>Meet our community</h2></div>
+    <p>Members and guild leadership from BΛSE, ΛRISE and OVERDRIVE, together in one continuous showcase.</p>
+   </div>
+   <div class="member-carousel" data-carousel="all">
+    <div class="member-window"><div class="member-track"></div></div>
+    <div class="member-controls"><button class="carousel-btn prev" type="button" aria-label="Previous members">‹</button><button class="carousel-btn play-toggle" type="button" aria-label="Pause member slideshow">Ⅱ</button><button class="carousel-btn next" type="button" aria-label="Next members">›</button></div>
+   </div>
+  </div>
+ </section>
+
+
+ <!-- ==================== GUILD MOMENTS (main-page slideshow, all guilds) ==================== -->
+ <section class="community-showcase" id="guild-showcase">
+  <div class="container">
+   <div class="section-head"><div><div class="eyebrow">From across the guilds</div><h2>Guild moments</h2></div><p>Stories, artwork and little moments shared by the ΛNΛNTYΛ community.</p></div>
+   <div class="guild-slideshow" data-slideshow-guild="all" aria-live="polite"></div>
+  </div>
+ </section>
+
+
+ <!-- ==================== JOIN + SUPPORT ====================
+      The support sentence is written in config.js (supportText). -->
+ <section class="cta" id="join">
+  <div class="container"><div class="cta-inner">
+   <div>
+    <div class="eyebrow">Your place is waiting</div>
+    <h2>Find your place in ΛNΛNTYΛ.</h2>
+    <p>Join our Discord, explore the guilds, check the requirements and submit your application.</p>
+    <p class="support-line" data-support></p>
+   </div>
+   <a class="btn" href="#" data-discord>Join our Discord</a>
+  </div></div>
+ </section>
+</main>
+
+<!-- ==================== FOOTER ==================== -->
+<footer><div class="container footer-inner">
+ <span>© <span id="year"></span> ΛNΛNTYΛ Guilds. Λll rights reserved.</span>
+ <span data-support></span>
+ <span><a href="#home">Back to top</a> · <a href="#" data-discord>Discord</a></span>
+</div></footer>
+
+<!-- ==================== SCRIPTS ====================
+     ORDER MATTERS: the data files first, script.js LAST. Don't reorder these lines. -->
+<script src="config.js"></script>
+<script src="images.js"></script>
+<script src="leaders.js"></script>
+<script src="members.js"></script>
+<script src="slides.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
