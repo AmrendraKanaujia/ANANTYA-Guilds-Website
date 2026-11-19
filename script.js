@@ -113,7 +113,12 @@
     all: everyone,
     base: everyone,
     arise: everyone.filter(p => p.guild === "arise"),
-    overdrive: everyone.filter(p => p.guild === "overdrive")
+    overdrive: everyone.filter(p => p.guild === "overdrive"),
+
+    // Leadership tabs: only that guild's GM / VGM (from leaders.js)
+    "leaders-base": leaderPeople.filter(p => p.guild === "base"),
+    "leaders-arise": leaderPeople.filter(p => p.guild === "arise"),
+    "leaders-overdrive": leaderPeople.filter(p => p.guild === "overdrive")
   };
 
 
@@ -146,21 +151,12 @@
 
 
   /* ========================================================================
-     4. LEADERSHIP TABS  (fills every  data-leaders="..."  box in index.html)
-     ======================================================================== */
-  $$("[data-leaders]").forEach(box => {
-    const list = leaderPeople.filter(p => p.guild === box.dataset.leaders);
-    if (!list.length) {
-      box.innerHTML = '<p class="empty-note">Leadership will be announced soon.</p>';
-      return;
-    }
-    list.forEach(p => box.appendChild(makeCard(p)));
-  });
-
-
-  /* ========================================================================
-     5. MEMBER CAROUSELS — slow, continuous, random, no repeats until everyone has shown
+     4/5. MEMBER AND LEADERSHIP CAROUSELS — slow, continuous, random,
+          no repeats until everyone has shown
      --------------------------------------------------------------------
+     The Leadership tabs use this same code. They have the extra attribute
+     data-fit-static in index.html, which means: if all leaders fit on the
+     screen, they stay still (no movement); if not, they roll like members.
      How it works:
        - We put everyone from the carousel's pool in a "bag" in random order.
        - Cards are taken from the bag one by one and added at the right end.
@@ -176,9 +172,13 @@
     const track = $(".member-track", root);
     const prevBtn = $(".prev", root), nextBtn = $(".next", root), playBtn = $(".play-toggle", root);
 
+    const controlsEl = $(".member-controls", root);
+    const fitStatic = root.hasAttribute("data-fit-static");   // Leadership tabs: stay still if everyone fits
+    let isStatic = false;                                      // true while everyone fits and nothing moves
+
     if (!pool.length) {
-      track.innerHTML = '<p class="empty-note">No members added yet.</p>';
-      $(".member-controls", root).hidden = true;
+      track.innerHTML = '<p class="empty-note">' + (fitStatic ? "Leadership will be announced soon." : "No members added yet.") + "</p>";
+      controlsEl.hidden = true;
       return;
     }
 
@@ -222,6 +222,31 @@
 
       gap = parseFloat(getComputedStyle(track).columnGap) || 14;
       step = cardWidth + gap;
+
+      // Leadership only: do all leaders fit in the visible frame?
+      if (fitStatic) {
+        const fits = pool.length * step - gap <= viewWidth + 0.5;
+        if (fits && !isStatic) {
+          // everyone fits -> show each leader once, in order, and stop moving
+          track.innerHTML = "";
+          items = []; bag = []; history = [];
+          pool.forEach(p => { items.push(p); track.appendChild(makeCard(p)); });
+          isStatic = true;
+          controlsEl.hidden = true;
+        } else if (!fits && isStatic) {
+          // screen got narrower -> go back to rolling
+          track.innerHTML = "";
+          items = []; bag = []; history = [];
+          isStatic = false;
+          controlsEl.hidden = false;
+          appendOne();
+        }
+        if (isStatic) {
+          offset = 0; pending = 0;
+          track.style.transform = "translate3d(0,0,0)";
+          return false;                                  // false = nothing to animate
+        }
+      }
 
       // card fully left of the frame -> remove it (remember it for "Previous")
       while (offset >= step) {

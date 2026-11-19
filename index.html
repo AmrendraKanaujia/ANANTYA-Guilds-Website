@@ -130,9 +130,14 @@
       </div>
       <div class="actions"><a class="btn btn-primary" href="#" data-discord>Apply to Join</a></div></div>
 
-     <!-- TAB: Leadership. Cards are created by script.js from leaders.js (guild = base). -->
+     <!-- TAB: Leadership. Cards come from leaders.js (guild = base).
+          Same card size as members. If all leaders fit on screen they stay still;
+          if they don't fit, they roll like the member carousel (data-fit-static does this). -->
      <div class="detail-pane" id="base-leaders"><h4>BΛSE — Leadership</h4><p class="lead">Meet the people responsible for managing BΛSE and supporting its members.</p>
-      <div class="leader-grid" data-leaders="base"></div></div>
+      <div class="member-carousel" data-carousel="leaders-base" data-fit-static>
+       <div class="member-window"><div class="member-track"></div></div>
+       <div class="member-controls"><button class="carousel-btn prev" type="button" aria-label="Previous leaders">‹</button><button class="carousel-btn play-toggle" type="button" aria-label="Pause leadership slideshow">Ⅱ</button><button class="carousel-btn next" type="button" aria-label="Next leaders">›</button></div>
+      </div></div>
 
      <!-- TAB: Members. Rolling carousel; "base" shows EVERY member and leader, randomly mixed. -->
      <div class="detail-pane" id="base-members"><h4>BΛSE — Members</h4><p class="lead">Meet the members who make BΛSE an active and welcoming place.</p>
@@ -189,7 +194,10 @@
       <div class="actions"><a class="btn btn-primary" href="#" data-discord>Apply to Join</a></div></div>
 
      <div class="detail-pane" id="arise-leaders"><h4>ΛRISE — Leadership</h4><p class="lead">Meet the people responsible for managing ΛRISE and supporting its members.</p>
-      <div class="leader-grid" data-leaders="arise"></div></div>
+      <div class="member-carousel" data-carousel="leaders-arise" data-fit-static>
+       <div class="member-window"><div class="member-track"></div></div>
+       <div class="member-controls"><button class="carousel-btn prev" type="button" aria-label="Previous leaders">‹</button><button class="carousel-btn play-toggle" type="button" aria-label="Pause leadership slideshow">Ⅱ</button><button class="carousel-btn next" type="button" aria-label="Next leaders">›</button></div>
+      </div></div>
 
      <!-- "arise" carousel shows only ΛRISE members + ΛRISE leaders, randomly mixed -->
      <div class="detail-pane" id="arise-members"><h4>ΛRISE — Members</h4><p class="lead">Meet the players who make up our three ΛRISE sub-guilds.</p>
@@ -248,7 +256,10 @@
       <div class="actions"><a class="btn btn-primary" href="#" data-discord>Apply to Join</a></div></div>
 
      <div class="detail-pane" id="overdrive-leaders"><h4>OVERDRIVE — Leadership</h4><p class="lead">Meet the people who coordinate OVERDRIVE and help members connect with our partner guild.</p>
-      <div class="leader-grid" data-leaders="overdrive"></div></div>
+      <div class="member-carousel" data-carousel="leaders-overdrive" data-fit-static>
+       <div class="member-window"><div class="member-track"></div></div>
+       <div class="member-controls"><button class="carousel-btn prev" type="button" aria-label="Previous leaders">‹</button><button class="carousel-btn play-toggle" type="button" aria-label="Pause leadership slideshow">Ⅱ</button><button class="carousel-btn next" type="button" aria-label="Next leaders">›</button></div>
+      </div></div>
 
      <div class="detail-pane" id="overdrive-members"><h4>OVERDRIVE — Members</h4><p class="lead">Meet the players in our OVERDRIVE community.</p>
       <div class="member-carousel" data-carousel="overdrive">

@@ -192,10 +192,8 @@ section{padding:76px 0}                                              /* vertical
 .member-links{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;font-weight:700;color:var(--accent)}
 .empty-note{font-size:13px;color:var(--muted);margin:12px 0}
 
-/* "Leadership" tab: GM and VGM cards in a grid */
-.leader-grid{display:grid;grid-template-columns:repeat(2,minmax(220px,1fr));gap:14px}
-.leader-grid .member-card{flex:none}
-.leader-grid .member-photo{height:220px}
+/* "Leadership" tab: GM and VGM cards are now the SAME size as member cards
+   (they use the carousel above). The only difference is the accent border (.is-leader). */
 
 
 /* ==========================================================================
@@ -272,7 +270,7 @@ footer a{color:var(--accent)}
   .nav a{padding:11px 8px;font-size:14px}
   .hero{padding:75px 0 60px}.hero-copy{font-size:15px}
   section{padding:58px 0}
-  .guild-grid,.content-grid,.leader-grid{grid-template-columns:1fr}
+  .guild-grid,.content-grid{grid-template-columns:1fr}
   .guild-card{min-height:220px}
   .detail-top{padding:23px 20px}.detail-tabs{padding:14px 18px}.detail-content{padding:22px 18px}
   .member-card{flex-basis:230px}.member-photo{height:190px}
