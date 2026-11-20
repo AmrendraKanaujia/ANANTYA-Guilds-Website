@@ -7,7 +7,6 @@
    - Space: "padding" is space INSIDE a box, "margin" is space OUTSIDE it,
             "gap" is space BETWEEN items.
    - Rounded corners: "border-radius". Bigger number = rounder.
-   - Everything between and is a note. The browser ignores it.
    ========================================================================== */
 
 
@@ -44,7 +43,7 @@
 *{box-sizing:border-box}
 [hidden]{display:none!important}   /* anything marked "hidden" really disappears */
 html{scroll-behavior:smooth;scroll-padding-top:94px}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.7 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.7 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow-x:clip}
 a{color:inherit;text-decoration:none}
 button{font:inherit}
 .container{width:min(1120px,calc(100% - 40px));margin-inline:auto}   /* keeps content centred, max 1120px wide */
@@ -54,31 +53,60 @@ section{padding:76px 0}                                              /* vertical
 
 
 /* ==========================================================================
-   3. HEADER (top bar: logo, menu, theme button, language)
+   3. HEADER (top bar: logo, language, menu, clocks, theme button)
    ========================================================================== */
 .site-header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 91%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-.header-inner{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:24px}
-.brand{display:flex;align-items:center;gap:12px;min-width:max-content}
-.brand-mark{width:42px;height:42px;border-radius:13px;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-weight:800;letter-spacing:-2px;overflow:hidden}
+.header-inner{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{display:flex;align-items:center;gap:12px;min-width:0;flex:0 0 auto}
+.brand-mark{width:42px;height:42px;flex:0 0 42px;border-radius:13px;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-weight:800;letter-spacing:-2px;overflow:hidden}
 .brand-mark img{width:100%;height:100%;object-fit:cover;display:block}   /* the logo picture, if you set one */
-.brand-name{font-size:18px;font-weight:500;letter-spacing:-.03em}
-.brand-tag{display:block;color:var(--muted);font-size:11px;letter-spacing:.04em;margin-top:-3px;height:18px;overflow:hidden}
+.brand-text{min-width:0;display:block}
+.brand-name{display:block;font-size:18px;font-weight:500;letter-spacing:-.03em;white-space:nowrap}
+.brand-tag{display:block;color:var(--muted);font-size:11px;letter-spacing:.04em;margin-top:-3px;height:18px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .tagline-track{display:block;animation:slide-up .7s ease both}
 @keyframes slide-up{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}
 
-.nav{display:flex;align-items:center;gap:22px;margin-left:auto}
-.nav a{font-size:13px;color:var(--muted);transition:color .2s}
+.header-right{display:flex;align-items:center;justify-content:flex-end;gap:22px;margin-left:auto;min-width:0}
+
+.nav{display:flex;align-items:center;gap:22px;flex:0 0 auto}
+.nav a{font-size:13px;color:var(--muted);transition:color .2s;white-space:nowrap}
 .nav a:hover,.nav a.active{color:var(--accent);font-weight:650}
 
-.header-actions{display:flex;align-items:center;gap:10px;flex:0 0 auto}
-.theme-btn,.menu-btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;width:38px;height:38px;display:grid;place-items:center;cursor:pointer}
-.menu-btn{display:none}   /* the ☰ button only appears on phones (see section 14) */
-.language-control{height:38px;width:154px;min-width:154px;flex:0 0 154px;display:flex;align-items:center;gap:8px;padding:0 10px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);font-size:13px;overflow:hidden;cursor:default}
-.language-label-window{height:20px;min-width:0;flex:1;overflow:hidden;white-space:nowrap}
-.language-label-track{display:block;line-height:20px;animation:slide-up .7s ease both}
+.header-actions{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex:0 0 auto;min-width:0}
+.theme-btn,.menu-btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;width:38px;height:38px;flex:0 0 38px;display:grid;place-items:center;cursor:pointer;padding:0}
+.menu-btn{display:none}   /* the ☰ button appears when items collapse on narrow screens */
+
+/* Language spinner (left of language button while translating) */
+.language-wrap{position:relative;flex:0 0 auto;display:flex;align-items:center;gap:6px}
+.lang-spinner{width:15px;height:15px;flex:0 0 15px;border-radius:50%;border:2px solid var(--line);border-top-color:var(--accent);animation:lang-spin .75s linear infinite}
+@keyframes lang-spin{to{transform:rotate(360deg)}}
+
+/* Language control sits on the left of the first nav item ("Guilds") */
+.language-control{height:38px;display:inline-flex;align-items:center;justify-content:flex-end;gap:6px;padding:0 6px;border:1px solid transparent;border-radius:10px;background:transparent;color:var(--ink);font-size:13px;cursor:pointer;min-width:0;transition:background .2s,border-color .2s}
+.language-control:hover,.language-control[aria-expanded="true"]{background:var(--surface);border-color:var(--line)}
+.language-globe{flex:0 0 auto;line-height:1}
+.language-label-window{height:20px;overflow:hidden;white-space:nowrap;text-align:right}
+.language-label-track{display:block;line-height:20px;text-align:right;animation:slide-up .7s ease both}
+
+/* Language dropdown menu */
+.language-menu{position:absolute;top:calc(100% + 8px);right:0;width:min(360px,calc(100vw - 28px));max-height:min(72vh,460px);overflow-y:auto;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:8px;z-index:40;display:flex;flex-direction:column;gap:4px}
+.language-option{display:flex;flex-direction:column;align-items:flex-start;gap:3px;width:100%;text-align:left;padding:10px 12px;border:1px solid transparent;border-radius:10px;background:transparent;color:var(--ink);cursor:pointer;transition:background .15s,border-color .15s}
+.language-option:hover{background:var(--surface-2)}
+.language-option.active{background:var(--soft);border-color:var(--accent)}
+.language-option-head{display:flex;align-items:center;justify-content:space-between;width:100%;gap:8px}
+.language-option-name{font-size:13px;font-weight:700;color:var(--ink)}
+.language-option.active .language-option-name{color:var(--accent)}
+.language-option-tag{font-size:11px;color:var(--muted)}
+.language-option-desc{font-size:11.5px;line-height:1.45;color:var(--muted)}
+
+/* Collapsed items inside mobile/narrow nav drawer */
+.nav-collapsed-tools{display:none;flex-direction:column;gap:6px;margin-top:8px;padding-top:10px;border-top:1px solid var(--line)}
+.nav-tool-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:10px 10px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);color:var(--ink);font-size:13px;font-weight:600;cursor:pointer;text-align:left}
+.nav-tool-btn:hover{border-color:var(--accent);color:var(--accent)}
+.nav-language-sublist{display:flex;flex-direction:column;gap:4px;max-height:240px;overflow-y:auto;padding:4px 0}
 
 /* LIVE CLOCKS in the header (UTC + visitor's local time) */
-.site-clock{display:flex;align-items:stretch;flex:0 0 auto;border:1px solid var(--line);border-radius:10px;background:var(--surface);font-variant-numeric:tabular-nums}
+.site-clock{display:flex;align-items:stretch;flex:0 0 auto;border:1px solid var(--line);border-radius:10px;background:var(--surface);font-variant-numeric:tabular-nums;min-width:0}
 .clock-item{display:flex;flex-direction:column;justify-content:center;padding:5px 12px;line-height:1.3;min-width:0}
 .clock-item+.clock-item{border-left:1px solid var(--line)}
 .clock-line{display:flex;align-items:baseline;gap:7px;white-space:nowrap}
@@ -135,16 +163,18 @@ section{padding:76px 0}                                              /* vertical
    8. GUILD DETAIL PANELS (opens under the cards: tabs + content)
    ========================================================================== */
 .guild-details{display:none;margin-top:28px;border:1px solid var(--line);border-radius:20px;background:var(--surface);box-shadow:var(--shadow);overflow:hidden}
-.guild-details.active{display:block;animation:panel-in .35s ease both}
-@keyframes panel-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.guild-details.active{display:block;animation:panel-in .3s ease both}
+@keyframes panel-in{from{opacity:0}to{opacity:1}}
 
 .detail-top{padding:30px 32px;background:var(--surface-2);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:center;gap:20px;text-align:center}
 .detail-top h3{font-size:clamp(26px,4vw,38px);letter-spacing:-.04em;margin:5px 0}
 .detail-top p{color:var(--muted);max-width:680px;margin:0 auto}
 .close-detail{border:1px solid var(--line);background:var(--surface);color:var(--ink);width:36px;height:36px;border-radius:10px;cursor:pointer;flex:none}
 
-.detail-tabs{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:18px 28px;border-bottom:1px solid var(--line);background:var(--surface)}
-.tab-btn{border:1px solid var(--line);background:var(--surface);color:var(--muted);padding:9px 15px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer}
+.detail-tabs{display:flex;justify-content:safe center;gap:8px;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin;padding:18px 28px;border-bottom:1px solid var(--line);background:var(--surface)}
+.detail-tabs::-webkit-scrollbar{height:4px}
+.detail-tabs::-webkit-scrollbar-thumb{background:var(--line);border-radius:999px}
+.tab-btn{flex:0 0 auto;white-space:nowrap;border:1px solid var(--line);background:var(--surface);color:var(--muted);padding:9px 15px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer}
 .tab-btn.active,.tab-btn:hover{background:var(--soft);border-color:var(--accent);color:var(--accent)}
 
 /* Everything inside a tab is left-aligned */
@@ -169,7 +199,7 @@ section{padding:76px 0}                                              /* vertical
 .callout strong{color:var(--accent)}
 .callout ul{padding-left:19px}
 
-/* GUILD GOALS list (used by BΛSE, ΛRISE and OVERDRIVE — all three look the same now) */
+/* GUILD GOALS list */
 .goal-list{display:grid;gap:12px}
 .goal{display:grid;grid-template-columns:38px 1fr;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;text-align:left}
 .goal-num{width:34px;height:34px;border-radius:50%;background:var(--soft);color:var(--accent);display:grid;place-items:center;font-size:12px;font-weight:800}
@@ -178,7 +208,7 @@ section{padding:76px 0}                                              /* vertical
 .pill-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 .pill{background:var(--surface-2);border:1px solid var(--line);padding:6px 10px;border-radius:999px;font-size:12px}
 
-/* RESET TIMES tab (ΛRISE): one card per reset, UTC and local time side by side */
+/* RESET TIMES tab */
 .reset-list{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
 .reset-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:19px 20px;text-align:left;min-width:0}
 .reset-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
@@ -201,45 +231,40 @@ section{padding:76px 0}                                              /* vertical
 .norms-section{border-top:1px solid var(--line)}
 .norms-head{text-align:center}
 .norms-head h2{font-size:clamp(29px,4vw,43px);letter-spacing:-.04em;margin:9px 0 12px}
+.norms-collapsible{position:relative;max-height:460px;overflow:hidden;transition:max-height .35s ease}
+.norms-collapsible.expanded{max-height:none}
+.norms-fade{position:absolute;left:0;right:0;bottom:0;height:150px;background:linear-gradient(to bottom,color-mix(in srgb,var(--bg) 0%,transparent) 0%,color-mix(in srgb,var(--bg) 82%,transparent) 55%,var(--bg) 100%);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);mask-image:linear-gradient(to bottom,transparent 0%,#000 55%);-webkit-mask-image:linear-gradient(to bottom,transparent 0%,#000 55%);pointer-events:none}
+.norms-collapsible.expanded .norms-fade{display:none}
+.norms-toggle-wrap{display:flex;justify-content:center;margin-top:18px;position:relative;z-index:1}
 
 
 /* ==========================================================================
-   11. PEOPLE CARDS (members + leaders) AND LEADERSHIP GRID
+   11. PEOPLE CARDS
    ========================================================================== */
 .member-card{flex:0 0 280px;background:var(--surface);border:1px solid var(--line);border-radius:15px;padding:18px;min-width:0;text-align:left}
-.member-card.is-leader{border-color:var(--accent)}              /* GM / VGM cards get an accent border */
+.member-card.is-leader{border-color:var(--accent)}
 .member-photo{height:170px;border-radius:11px;background:var(--surface-2);overflow:hidden;margin-bottom:14px}
 .member-photo img{width:100%;height:100%;object-fit:cover;display:block;-webkit-user-drag:none;user-select:none}
-.member-card .role{font-size:11px;text-transform:uppercase;letter-spacing:.13em;color:var(--accent);font-weight:750}
-.member-card h4{font-size:15px;margin:3px 0}
-.member-card p{font-size:12px;color:var(--muted);margin:7px 0 12px}
+.member-card .role{font-size:11px;text-transform:uppercase;letter-spacing:.13em;color:var(--accent);font-weight:750;text-align:left}
+.member-card h4{font-size:15px;margin:3px 0;text-align:left}
+.member-card p{font-size:12px;color:var(--muted);margin:7px 0 12px;text-align:left}
 .member-card .member-review{font-style:italic;color:var(--accent);border-left:2px solid var(--accent);padding-left:9px}
 .member-links{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;font-weight:700;color:var(--accent)}
 .empty-note{font-size:13px;color:var(--muted);margin:12px 0}
 
-/* "Leadership" tab: GM and VGM cards are now the SAME size as member cards
-   (they use the carousel above). The only difference is the accent border (.is-leader). */
-
 
 /* ==========================================================================
-   12. MEMBER CAROUSELS (slow continuous sideways loop)
+   12. MEMBER CAROUSELS
    ========================================================================== */
 .member-carousel{position:relative;margin-top:14px}
-/* The padding (top 4px, bottom 8px) gives the cards' borders room, so the frame no longer clips their edges */
-.member-window{overflow:hidden;touch-action:pan-y;cursor:grab;padding:4px 0 8px}   /* the visible "frame" */
+.member-window{overflow:hidden;touch-action:pan-y;cursor:grab;padding:4px 0 8px}
 .member-window.dragging{cursor:grabbing}
-.member-track{display:flex;gap:14px;width:max-content;will-change:transform}   /* the moving strip of cards */
+.member-track{display:flex;gap:14px;width:max-content;will-change:transform}
 .all-members-section{padding-top:56px}
 .member-controls{display:flex;justify-content:flex-end;align-items:center;gap:7px;margin-top:16px;position:relative;z-index:1}
 
-/* Leadership tabs: when only a few leaders fit on screen, they stand still and are CENTRED.
-   (script.js adds the class "is-centered" automatically in that case.) */
 .member-carousel.is-centered .member-track{margin-left:auto;margin-right:auto}
-
-/* Leadership tabs: centred heading and description (class "center-head" is set in index.html) */
-.detail-pane.center-head h4{text-align:center}
-.detail-pane.center-head .lead{text-align:center;margin-left:auto;margin-right:auto}
-.carousel-btn{display:inline-grid;place-items:center;flex:0 0 34px;width:34px;height:34px;min-width:34px;padding:0;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;line-height:1;font-family:Arial,sans-serif;font-size:19px;font-weight:500}
+.carousel-btn{display:inline-grid;place-items:center;flex:0 0 34px;width:34px;height:34px;min-width:34px;padding:0;border-radius:8px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);cursor:pointer;line-height:1;font-family:Arial,sans-serif;font-size:19px;font-weight:400}
 .carousel-btn:hover{border-color:var(--accent);color:var(--accent)}
 .carousel-btn.play-toggle{font-size:14px;font-weight:700}
 
@@ -247,27 +272,34 @@ section{padding:76px 0}                                              /* vertical
 /* ==========================================================================
    13. GUILD MOMENTS SLIDESHOWS
    ========================================================================== */
-.guild-slideshow{margin:18px 28px 0;border:1px solid var(--line);border-radius:16px;background:var(--surface);overflow:hidden;min-height:270px}
+.guild-slideshow{margin:0 28px 28px;border:1px solid var(--line);border-radius:16px;background:var(--surface);overflow:hidden;min-height:270px}
 .community-showcase{padding:64px 0}
 .community-showcase .guild-slideshow{margin:0}
 .guild-slide{display:grid;grid-template-columns:minmax(220px,.82fr) 1.18fr;height:270px}
 .guild-slide-image{width:100%;height:270px;object-fit:cover;background:var(--surface-2);display:block}
-.guild-slide-image.no-image{background:linear-gradient(135deg,var(--soft),var(--surface-2))}   /* shown when a picture is missing */
-.guild-slide-copy{height:270px;padding:22px 24px;display:flex;flex-direction:column;align-items:flex-start;text-align:left;min-width:0;overflow:hidden}
+.guild-slide-image.no-image{background:linear-gradient(135deg,var(--soft),var(--surface-2))}
+.guild-slide-copy{height:270px;padding:20px 24px;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;text-align:left;min-width:0;overflow:hidden}
+.guild-slide-top{width:100%;min-width:0;display:flex;flex-direction:column;align-items:flex-start}
+.guild-slide-bottom{width:100%;display:flex;flex-direction:column;align-items:flex-start;gap:10px;flex:0 0 auto}
 .guild-slide-kicker{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);font-weight:800}
-.guild-slide-copy h4{font-size:20px;margin:7px 0 8px}
-.guild-slide-description{font-size:13px;color:var(--muted);margin:0;line-height:1.55;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;max-height:4.65em;min-height:4.65em}
-.guild-slide-description.expanded{display:block;overflow:auto;padding-right:5px}
-.guild-slide-more{border:0;background:transparent;padding:0;margin-top:5px;font-size:11px;color:var(--accent);font-weight:750;cursor:pointer}
-.guild-slide-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:13px}
+.guild-slide-copy h4{font-size:20px;margin:5px 0 6px;line-height:1.25}
+.guild-slide-description{font-size:13px;color:var(--muted);margin:0;line-height:1.5;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;max-height:4.5em}
+.guild-slide-description.expanded{display:block;-webkit-line-clamp:unset;max-height:none;overflow:visible}
+.guild-slideshow.is-expanded{min-height:0}
+.guild-slideshow.is-expanded .guild-slide{height:auto;min-height:270px;align-items:stretch}
+.guild-slideshow.is-expanded .guild-slide-image{height:100%;min-height:270px}
+.guild-slideshow.is-expanded .guild-slide-copy{height:auto;min-height:270px;gap:14px;overflow:visible}
+.guild-slide-more{border:0;background:transparent;padding:0;margin-top:4px;font-size:11px;color:var(--accent);font-weight:750;cursor:pointer}
+.guild-slide-links{display:flex;gap:8px;flex-wrap:wrap}
 .guild-slide-links:empty{display:none}
-.guild-slide-links a{font-size:11px;font-weight:750;padding:7px 11px;border:1px solid var(--line);border-radius:9px;color:var(--accent)}
-.guild-slide-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;margin-top:12px}
+.guild-slide-links a{font-size:11px;font-weight:750;padding:5px 10px;border:1px solid var(--line);border-radius:9px;color:var(--accent)}
+.guild-slide-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%}
 .guild-slide-dots{display:flex;gap:5px}
 .guild-slide-dot{width:6px;height:6px;border-radius:50%;background:var(--line)}
 .guild-slide-dot.active{background:var(--accent)}
 .guild-slide-controls{display:flex;align-items:center;gap:7px}
 .guild-slide-controls button{display:inline-grid;place-items:center;flex:0 0 34px;width:34px;height:34px;min-width:34px;padding:0;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--ink);cursor:pointer;line-height:1;font-family:Arial,sans-serif;font-size:19px}
+.guild-slide-controls button:hover{border-color:var(--accent);color:var(--accent)}
 .guild-slide-controls button[data-act="play"]{font-size:14px;font-weight:700}
 
 
@@ -288,30 +320,61 @@ footer a{color:var(--accent)}
 
 
 /* ==========================================================================
-   15. PHONE / SMALL SCREEN LAYOUT
+   15. PHONE / SMALL SCREEN LAYOUT & PROGRESSIVE COLLAPSE
    ========================================================================== */
-/* Medium and small screens: the clocks move to their own row under the header bar */
-@media(max-width:1120px){
-  html{scroll-padding-top:140px}
-  .header-inner{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;row-gap:10px;padding:12px 0;min-height:0}
-  .brand{grid-column:1;grid-row:1}
-  .nav{grid-column:2;grid-row:1;justify-self:end}
-  .header-actions{grid-column:3;grid-row:1}
-  .site-clock{grid-column:1/-1;grid-row:2;justify-self:center;width:100%;max-width:460px}
-  .clock-item{flex:1;align-items:center}
+/* When screen drops below 1300px, switch header to a 2-row grid so clock shifts below */
+@media(max-width:1300px){
+  html{scroll-padding-top:142px}
+  .header-inner{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:12px;row-gap:10px;padding:12px 0;min-height:0}
+  .brand{grid-column:1;grid-row:1;min-width:0}
+  .header-right{grid-column:2;grid-row:1;gap:14px;flex-shrink:0}
+  .site-clock{grid-column:1/-1;grid-row:2;justify-self:center;width:100%;max-width:460px;margin-inline:auto}
+  .clock-item{flex:1;align-items:center;text-align:center}
+  .clock-line{justify-content:center}
 }
-@media(max-width:850px){
-  .nav{gap:13px}.nav a{font-size:12px}
-  .member-card{flex-basis:250px}
-}
-@media(max-width:700px){
-  .container{width:min(100% - 30px,600px)}
-  .header-inner{min-height:68px}
-  .menu-btn{display:grid}
-  .language-control{width:132px;min-width:132px;flex-basis:132px}
-  .nav{display:none;position:absolute;left:15px;right:15px;top:calc(100% + 6px);margin-left:0;padding:15px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);flex-direction:column;align-items:stretch;gap:0}
+
+/* Step 1 collapse: theme icon moves into hamburger menu */
+@media(max-width:920px){
+  .header-right{gap:10px}
+  .nav{display:none;position:absolute;left:14px;right:14px;top:calc(100% + 6px);padding:15px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);flex-direction:column;align-items:stretch;gap:0;z-index:30}
   .nav.open{display:flex}
   .nav a{padding:11px 8px;font-size:14px}
+  .menu-btn{display:grid}
+  .theme-btn{display:none}
+  .nav-collapsed-tools{display:flex}
+  .nav-collapsed-tools .nav-lang-btn,.nav-collapsed-tools .nav-language-sublist{display:none}
+  .member-card{flex-basis:250px}
+}
+
+/* Step 2 collapse: language text hides, leaving only the globe icon */
+@media(max-width:780px){
+  .language-label-window{display:none}
+  .language-control{width:38px;padding:0;justify-content:center;border-color:var(--line);background:var(--surface)}
+}
+
+/* Step 3 collapse: globe icon merges into hamburger menu */
+@media(max-width:620px){
+  .language-wrap{display:none}
+  .nav-collapsed-tools .nav-lang-btn{display:flex}
+  .nav-collapsed-tools .nav-language-sublist:not([hidden]){display:flex}
+}
+
+@media(max-width:700px){
+  .container{width:min(100% - 28px,600px)}
+  .header-inner{column-gap:8px;row-gap:8px;padding:10px 0}
+  .brand{gap:9px;min-width:0;overflow:hidden}
+  .brand-text{min-width:0;overflow:hidden}
+  .brand-mark{width:36px;height:36px;flex-basis:36px;border-radius:10px;font-size:13px}
+  .brand-name{font-size:16px}
+  .brand-tag{font-size:10px;height:15px}
+  .header-actions{gap:7px}
+  .menu-btn{width:34px;height:34px;flex-basis:34px;border-radius:9px}
+  .site-clock{max-width:100%}
+  .clock-item{padding:4px 6px}
+  .clock-line{gap:4px}
+  .clock-zone{font-size:9.5px}
+  .clock-time{font-size:12px}
+  .clock-date{font-size:9.5px}
   .hero{padding:75px 0 60px}.hero-copy{font-size:15px}
   section{padding:58px 0}
   .guild-grid,.content-grid,.reset-list{grid-template-columns:1fr}
@@ -319,13 +382,30 @@ footer a{color:var(--accent)}
   .guild-card{min-height:220px}
   .detail-top{padding:23px 20px}.detail-tabs{padding:14px 18px}.detail-content{padding:22px 18px}
   .member-card{flex-basis:230px}.member-photo{height:190px}
-  .guild-slideshow{margin:14px 14px 0;min-height:410px}
-  .guild-slide{grid-template-columns:1fr;height:410px}
+  .guild-slideshow{margin:0 14px 18px;min-height:430px}
+  .guild-slide{grid-template-columns:1fr;height:430px}
   .guild-slide-image{height:170px}
-  .guild-slide-copy{height:240px;padding:18px}
+  .guild-slide-copy{height:260px;padding:16px 18px}
+  .guild-slideshow.is-expanded .guild-slide{height:auto;min-height:430px}
+  .guild-slideshow.is-expanded .guild-slide-image{height:170px;min-height:170px}
+  .guild-slideshow.is-expanded .guild-slide-copy{height:auto;min-height:260px}
   .community-showcase{padding:48px 0}
   .cta-inner{display:block;padding:30px 24px}.cta .btn{margin-top:22px}
+  .translation-error-popup{right:14px;bottom:14px;width:calc(100vw - 28px)}
 }
+
+
+/* ==========================================================================
+   16. TRANSLATION ERROR POPUP
+   ========================================================================== */
+.translation-error-popup{position:fixed;right:20px;bottom:20px;z-index:50;width:min(380px,calc(100vw - 32px));background:var(--surface);color:var(--ink);border:1px solid var(--accent);border-radius:14px;padding:15px 17px;box-shadow:var(--shadow)}
+.translation-error-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.translation-error-title{font-size:14px;color:var(--accent)}
+.translation-error-close{border:1px solid var(--line);background:var(--surface-2);color:var(--ink);width:28px;height:28px;border-radius:8px;cursor:pointer;display:grid;place-items:center;line-height:1;font-size:13px;flex:0 0 auto}
+.translation-error-close:hover{border-color:var(--accent);color:var(--accent)}
+.translation-error-reason{margin:8px 0;font-size:13px;line-height:1.45;color:var(--muted)}
+.translation-error-contact{margin:0;font-size:12.5px;line-height:1.45;color:var(--ink)}
+.translation-error-contact a{color:var(--accent);font-weight:700;text-decoration:underline}
 
 /* Visitors who asked their device for less motion get no animations */
 @media(prefers-reduced-motion:reduce){

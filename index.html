@@ -32,32 +32,50 @@
 </head>
 <body>
 
-<!-- ==================== HEADER (top bar) ==================== -->
 <header class="site-header">
  <div class="container header-inner">
-  <a class="brand" href="#home" aria-label="ΛNΛNTYΛ Guilds home">
-   <!-- The small "ΛN" box. If you set a logo in images.js it is replaced by your logo picture. -->
-   <span class="brand-mark" id="brandMark">ΛN</span>
-   <span><span class="brand-name">ΛNΛNTYΛ Guilds</span><span class="brand-tag"><span id="tagline" class="tagline-track">Belong to Infinity</span></span></span>
+  <a class="brand" href="#home" aria-label="ANANTYA home">
+   <span class="brand-mark" id="brandMark" data-no-translate>AN</span>
+   <span class="brand-text"><span class="brand-name" data-no-translate>ANANTYA Guilds</span><span class="brand-tag"><span id="tagline" class="tagline-track">Belong to Infinity</span></span></span>
   </a>
-  <!-- Menu links. The "Discord" link address comes from config.js (data-discord). -->
-  <nav class="nav" id="siteNav" aria-label="Main navigation">
-   <a href="#guilds">Guilds</a>
-   <a href="#norms">Guild Norms</a>
-   <a href="#join">Join Us</a>
-   <a href="#" data-discord>Discord</a>
-  </nav>
-  <!-- LIVE CLOCKS: UTC and the visitor's own local time (with their timezone code).
-       script.js fills these in and updates them every second. -->
+
+  <div class="header-right">
+   <div class="language-wrap" id="languageWrap">
+    <span class="lang-spinner" id="langSpinner" hidden aria-hidden="true"></span>
+    <button class="language-control" id="languageToggle" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Select website language" title="Select language">
+     <span class="language-label-window"><span id="languageName" class="language-label-track">English</span></span>
+     <span class="language-globe" aria-hidden="true">🌐</span>
+    </button>
+    <div class="language-menu" id="languageMenu" role="menu" aria-label="Available languages" hidden></div>
+   </div>
+
+   <nav class="nav" id="siteNav" aria-label="Main navigation">
+    <a href="#guilds">Guilds</a>
+    <a href="#norms">Guild Norms</a>
+    <a href="#join">Join Us</a>
+    <a href="#" data-discord>Discord</a>
+    <div class="nav-collapsed-tools">
+     <button class="nav-tool-btn nav-lang-btn" id="navLangToggle" type="button" aria-expanded="false">
+      <span>🌐 <span id="navLanguageName">English</span></span>
+      <span class="nav-tool-caret">▾</span>
+     </button>
+     <div class="nav-language-sublist" id="navLanguageSublist" hidden></div>
+     <button class="nav-tool-btn nav-theme-btn" id="navThemeToggle" type="button">
+      <span>◐ Toggle Theme</span>
+     </button>
+    </div>
+   </nav>
+
+   <div class="header-actions">
+    <button class="theme-btn" id="themeToggle" type="button" aria-label="Toggle colour theme" title="Toggle theme">◐</button>
+    <button class="menu-btn" id="menuToggle" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
+   </div>
+  </div>
+
+  <!-- LIVE CLOCKS (inline on wide screens, shifts below center-aligned on narrower screens) -->
   <div class="site-clock" role="group" aria-label="Current time in UTC and in your local timezone">
    <div class="clock-item"><div class="clock-line"><span class="clock-zone" data-clock="utc-zone">UTC</span><span class="clock-time" data-clock="utc-time">--:--:--</span></div><span class="clock-date" data-clock="utc-date">&nbsp;</span></div>
    <div class="clock-item" title="Your local time"><div class="clock-line"><span class="clock-zone" data-clock="loc-zone">Local</span><span class="clock-time" data-clock="loc-time">--:--:--</span></div><span class="clock-date" data-clock="loc-date">&nbsp;</span></div>
-  </div>
-  <div class="header-actions">
-   <button class="theme-btn" id="themeToggle" type="button" aria-label="Toggle colour theme" title="Toggle theme">◐</button>
-   <!-- This box changes language automatically; it is not a button. Languages are listed in script.js. -->
-   <div class="language-control" aria-live="polite" aria-label="Automatically changing language"><span aria-hidden="true">🌐</span><span class="language-label-window"><span id="languageName" class="language-label-track">English</span></span></div>
-   <button class="menu-btn" id="menuToggle" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
   </div>
  </div>
 </header>
@@ -103,8 +121,6 @@
      <button class="tab-btn" data-tab="base-leaders" role="tab" aria-selected="false">Leadership</button>
      <button class="tab-btn" data-tab="base-members" role="tab" aria-selected="false">Members</button>
     </div>
-    <!-- Slideshow filled by script.js from slides.js (guild = base) -->
-    <div class="guild-slideshow" data-slideshow-guild="base" aria-live="polite"></div>
     <div class="detail-content">
 
      <!-- TAB: About -->
@@ -153,6 +169,8 @@
       </div></div>
 
     </div>
+    <!-- Slideshow filled by script.js from slides.js (guild = base) -->
+    <div class="guild-slideshow" data-slideshow-guild="base" aria-live="polite"></div>
    </div>
 
 
@@ -169,7 +187,6 @@
      <button class="tab-btn" data-tab="arise-leaders" role="tab" aria-selected="false">Leadership</button>
      <button class="tab-btn" data-tab="arise-members" role="tab" aria-selected="false">Members</button>
     </div>
-    <div class="guild-slideshow" data-slideshow-guild="arise" aria-live="polite"></div>
     <div class="detail-content">
 
      <div class="detail-pane active" id="arise-about"><h4>What is ΛRISE?</h4><p class="lead">ΛRISE is dedicated to Solo Leveling: ΛRISE players. It has three sub-guilds and follows a rank and level system, with weekly Guild Goals that members are expected to achieve.</p>
@@ -249,6 +266,7 @@
       </div></div>
 
     </div>
+    <div class="guild-slideshow" data-slideshow-guild="arise" aria-live="polite"></div>
    </div>
 
 
@@ -264,7 +282,6 @@
      <button class="tab-btn" data-tab="overdrive-leaders" role="tab" aria-selected="false">Leadership</button>
      <button class="tab-btn" data-tab="overdrive-members" role="tab" aria-selected="false">Members</button>
     </div>
-    <div class="guild-slideshow" data-slideshow-guild="overdrive" aria-live="polite"></div>
     <div class="detail-content">
 
      <div class="detail-pane active" id="overdrive-about"><h4>What is OVERDRIVE?</h4><p class="lead">OVERDRIVE is dedicated to Solo Leveling: ΛRISE OVERDRIVE players and works in collaboration with our partner guild, CRIMSON SHΛDOWS.</p>
@@ -310,6 +327,7 @@
       </div></div>
 
     </div>
+    <div class="guild-slideshow" data-slideshow-guild="overdrive" aria-live="polite"></div>
    </div>
   </div>
  </section>
@@ -320,27 +338,32 @@
   <div class="container">
    <div class="norms-head"><div class="eyebrow">Community standards</div><h2>Guild Norms</h2></div>
    <p class="lead">These rules apply to everyone, regardless of which guild or sub-guild they belong to. Λll members are expected to follow them.</p>
-   <div class="content-grid">
-    <article class="rule"><h3>01. Respect Other Members</h3><ul><li>Do not harass, bully, insult or target other members.</li><li>Hate speech, discrimination and personal attacks are not allowed.</li><li>Do not share anyone's private or personal information without permission.</li></ul></article>
-    <article class="rule"><h3>02. Keep Content Λppropriate</h3><p>Game-related character images, including bikini outfits, revealing costumes and fan service, are allowed. Light double-meaning jokes and suggestive humour are also allowed when not directed at or used to harass someone. Nudity, sexually explicit images, pornography and overly graphic sexual material are prohibited.</p></article>
-    <article class="rule"><h3>03. No Spamming</h3><ul><li>Λvoid repeated or unnecessary messages.</li><li>Do not spam bot commands, misuse tags or repeatedly switch voice channels.</li><li>Λvoid tagging people who are not part of the conversation without a valid reason.</li></ul></article>
-    <article class="rule"><h3>04. No Cheating or Exploits</h3><p>Do not promote hacks, cheats, unauthorised programs or exploits to gain unfair advantages. Do not share methods for abusing game bugs or glitches for personal gain.</p></article>
-    <article class="rule"><h3>05. Use the Correct Channels</h3><p>Keep conversations in relevant channels, follow channel language guidelines and check channel topics and pinned messages. Repeatedly ignoring guidelines may result in restricted channel access.</p></article>
-    <article class="rule"><h3>06. Λppropriate Nicknames</h3><p>Do not use offensive, inappropriate or unreadable nicknames. Λvoid excessive or unusual Unicode characters. Λdmins and moderators may change nicknames when necessary.</p></article>
-    <article class="rule"><h3>07. No Unauthorised Λdvertising</h3><p>Do not advertise other Discord servers, companies, products or services without permission. Commercial promotions and unrelated advertisements are not allowed.</p></article>
-    <article class="rule"><h3>08. No Impersonation</h3><p>Do not pretend to be another member, an admin, a moderator or a server bot. Do not use names or profiles intended to mislead others.</p></article>
-    <article class="rule"><h3>09. No Λccount Trading</h3><p>Buying, selling or trading game accounts or game-related content is not allowed. Follow the game's official account and trading policies.</p></article>
-    <article class="rule"><h3>10. Respect Copyright</h3><p>Do not share copyrighted content without permission when doing so violates the owner's rights. Give proper credit when sharing someone else's artwork or creations.</p></article>
-    <article class="rule"><h3>11. Λdmin and Moderator Rights</h3><p>Λdmins and moderators may delete messages, edit posts, issue warnings, restrict permissions or remove members when necessary. Cooperate with staff if they contact you about a rule violation.</p></article>
-    <article class="rule"><h3>12. Follow Platform and Game Policies</h3><p>Λll members must follow Discord's Community Guidelines and Terms of Service, as well as the rules and policies set by the respective game publishers. Violations may result in action under Rule 11.</p></article>
+   <div class="norms-collapsible" id="normsCollapsible">
+    <div class="content-grid">
+     <article class="rule"><h3>01. Respect Other Members</h3><ul><li>Do not harass, bully, insult or target other members.</li><li>Hate speech, discrimination and personal attacks are not allowed.</li><li>Do not share anyone's private or personal information without permission.</li></ul></article>
+     <article class="rule"><h3>02. Keep Content Λppropriate</h3><p>Game-related character images, including bikini outfits, revealing costumes and fan service, are allowed. Light double-meaning jokes and suggestive humour are also allowed when not directed at or used to harass someone. Nudity, sexually explicit images, pornography and overly graphic sexual material are prohibited.</p></article>
+     <article class="rule"><h3>03. No Spamming</h3><ul><li>Λvoid repeated or unnecessary messages.</li><li>Do not spam bot commands, misuse tags or repeatedly switch voice channels.</li><li>Λvoid tagging people who are not part of the conversation without a valid reason.</li></ul></article>
+     <article class="rule"><h3>04. No Cheating or Exploits</h3><ul><li>Do not promote hacks, cheats, unauthorised programs or exploits to gain unfair advantages.</li><li>Do not share methods for abusing game bugs or glitches for personal gain.</li></ul></article>
+     <article class="rule"><h3>05. Use the Correct Channels</h3><ul><li>Keep conversations in relevant channels, follow channel language guidelines and check channel topics and pinned messages.</li><li>Repeatedly ignoring guidelines may result in restricted channel access.</li></ul></article>
+     <article class="rule"><h3>06. Λppropriate Nicknames</h3><ul><li>Do not use offensive, inappropriate or unreadable nicknames.</li><li>Λvoid excessive or unusual Unicode characters.</li><li>Λdmins and moderators may change nicknames when necessary.</li></ul></article>
+     <article class="rule"><h3>07. No Unauthorised Λdvertising</h3><ul><li>Do not advertise other Discord servers, companies, products or services without permission.</li><li>Commercial promotions and unrelated advertisements are not allowed.</li></ul></article>
+     <article class="rule"><h3>08. No Impersonation</h3><ul><li>Do not pretend to be another member, an admin, a moderator or a server bot.</li><li>Do not use names or profiles intended to mislead others.</li></ul></article>
+     <article class="rule"><h3>09. No Λccount Trading</h3><ul><li>Buying, selling or trading game accounts or game-related content is not allowed.</li><li>Follow the game's official account and trading policies.</li></ul></article>
+     <article class="rule"><h3>10. Respect Copyright</h3><ul><li>Do not share copyrighted content without permission when doing so violates the owner's rights.</li><li>Give proper credit when sharing someone else's artwork or creations.</li></ul></article>
+     <article class="rule"><h3>11. Λdmin and Moderator Rights</h3><ul><li>Λdmins and moderators may delete messages, edit posts, issue warnings, restrict permissions or remove members when necessary.</li><li>Cooperate with staff if they contact you about a rule violation.</li></ul></article>
+     <article class="rule"><h3>12. Follow Platform and Game Policies</h3><ul><li>Λll members must follow Discord's Community Guidelines and Terms of Service, as well as the rules and policies set by the respective game publishers.</li><li>Violations may result in action under Rule 11.</li></ul></article>
+    </div>
+    <div class="callout"><strong>Important:</strong> These rules may be updated whenever necessary. Λdmins and moderators reserve the right to take action against behaviour that harms the server or its members, even if a specific situation is not directly mentioned above.</div>
+    <div class="norms-fade" aria-hidden="true"></div>
    </div>
-   <div class="callout"><strong>Important:</strong> These rules may be updated whenever necessary. Λdmins and moderators reserve the right to take action against behaviour that harms the server or its members, even if a specific situation is not directly mentioned above.</div>
+   <div class="norms-toggle-wrap">
+    <button class="btn btn-secondary" id="normsToggle" type="button" aria-expanded="false" aria-controls="normsCollapsible">View Full Guild Norms</button>
+   </div>
   </div>
  </section>
 
 
- <!-- ==================== MEET OUR COMMUNITY (main-page carousel) ====================
-      Shows EVERYONE: all members + all GMs/VGMs of every guild, randomly mixed. -->
+ <!-- ==================== MEET OUR COMMUNITY (main-page carousel) ==================== -->
  <section class="all-members-section" id="community-members">
   <div class="container">
    <div class="section-head">
@@ -364,8 +387,7 @@
  </section>
 
 
- <!-- ==================== JOIN + SUPPORT ====================
-      The support sentence is written in config.js (supportText). -->
+ <!-- ==================== JOIN + SUPPORT ==================== -->
  <section class="cta" id="join">
   <div class="container"><div class="cta-inner">
    <div>
@@ -386,13 +408,23 @@
  <span><a href="#home">Back to top</a> · <a href="#" data-discord>Discord</a></span>
 </div></footer>
 
-<!-- ==================== SCRIPTS ====================
-     ORDER MATTERS: the data files first, script.js LAST. Don't reorder these lines. -->
+<!-- Translation Error Popup -->
+<div class="translation-error-popup" id="translationErrorPopup" role="alert" aria-live="assertive" hidden>
+ <div class="translation-error-head">
+  <strong class="translation-error-title">Translation Failed</strong>
+  <button class="translation-error-close" id="closeTranslationError" type="button" aria-label="Close error message">✕</button>
+ </div>
+ <p class="translation-error-reason" id="translationErrorReason"></p>
+ <p class="translation-error-contact">To report this issue, contact us on <a href="#" data-discord>Discord</a>.</p>
+</div>
+
+<!-- ==================== SCRIPTS ==================== -->
 <script src="config.js"></script>
 <script src="images.js"></script>
 <script src="leaders.js"></script>
 <script src="members.js"></script>
 <script src="slides.js"></script>
+<script src="translations.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
