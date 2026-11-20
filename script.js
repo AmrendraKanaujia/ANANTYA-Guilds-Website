@@ -256,7 +256,21 @@
     return out;
   }
 
+  function isRateLimitError(res, data, rawTranslated) {
+    const statusVal = data && data.responseStatus;
+    const detailsVal = String((data && data.responseDetails) || "");
+    return (
+      (res && res.status === 429) ||
+      statusVal === 429 ||
+      String(statusVal) === "429" ||
+      /rate\s*limit|too many requests|used all available free translations|quota/i.test(rawTranslated + " " + detailsVal)
+    );
+  }
+
   async function tryLibreTranslate(maskedText, targetLang) {
+    if (translationHaltedForLimit) {
+      throw new Error("Translation halted due to rate limit.");
+    }
     const endpoint = (TCFG.libreTranslateUrl) || "https://libretranslate.com/translate";
     const res = await fetch(endpoint, {
       method: "POST",
@@ -268,10 +282,18 @@
         format: "text"
       })
     });
+    if (res.status === 429) {
+      translationHaltedForLimit = true;
+      throw new Error("LibreTranslate rate limit exceeded (429).");
+    }
     if (!res.ok) {
       throw new Error("LibreTranslate fallback failed with status " + res.status + ".");
     }
     const data = await res.json();
+    if (isRateLimitError(res, data, data && data.translatedText ? String(data.translatedText) : "")) {
+      translationHaltedForLimit = true;
+      throw new Error("LibreTranslate rate limit exceeded.");
+    }
     const out = data && data.translatedText ? String(data.translatedText) : "";
     if (!out) {
       throw new Error("LibreTranslate fallback returned an empty response.");
@@ -296,9 +318,9 @@
       return text.replace(trimmed, direct);
     }
 
-    // If a rate limit already halted network translation for this session, skip extra network requests
+    // Immediately stop requesting once rate limit is hit
     if (translationHaltedForLimit) {
-      return text.replace(trimmed, restoreText(masked, tokens));
+      throw new Error("Translation rate limit reached.");
     }
 
     let res, data;
@@ -307,47 +329,36 @@
       res = await fetch(url);
       data = await res.json();
     } catch (e) {
+      if (translationHaltedForLimit) {
+        throw new Error("Translation rate limit reached.");
+      }
       try {
         const libreOut = await tryLibreTranslate(masked, targetLang);
         const finalLibre = restoreText(libreOut, tokens);
         translationCache[cacheKey] = finalLibre;
         return text.replace(trimmed, finalLibre);
       } catch (libreErr) {
-        translationHaltedForLimit = true;
         throw new Error("Network or connection error while contacting translation services.");
       }
     }
 
     const rawTranslated = (data && data.responseData && data.responseData.translatedText) || "";
-    const statusVal = data && data.responseStatus;
-    const detailsVal = String((data && data.responseDetails) || "");
 
-    const isRateLimited =
-      res.status === 429 ||
-      statusVal === 429 ||
-      String(statusVal) === "429" ||
-      /rate\s*limit|too many requests|used all available free translations|quota/i.test(rawTranslated + " " + detailsVal);
-
-    if (isRateLimited) {
-      try {
-        const libreOut = await tryLibreTranslate(masked, targetLang);
-        const finalLibre = restoreText(libreOut, tokens);
-        translationCache[cacheKey] = finalLibre;
-        return text.replace(trimmed, finalLibre);
-      } catch (libreErr) {
-        translationHaltedForLimit = true;
-        throw new Error("Translation rate limit exceeded and LibreTranslate fallback also failed.");
-      }
+    if (isRateLimitError(res, data, rawTranslated)) {
+      translationHaltedForLimit = true;
+      throw new Error("Translation rate limit exceeded.");
     }
 
     if (!res.ok) {
+      if (translationHaltedForLimit) {
+        throw new Error("Translation rate limit reached.");
+      }
       try {
         const libreOut = await tryLibreTranslate(masked, targetLang);
         const finalLibre = restoreText(libreOut, tokens);
         translationCache[cacheKey] = finalLibre;
         return text.replace(trimmed, finalLibre);
       } catch (libreErr) {
-        translationHaltedForLimit = true;
         throw new Error("Translation request failed with status " + res.status + ".");
       }
     }
@@ -411,32 +422,43 @@
     });
   }
 
+  function revertContainerToEnglish(rootEl) {
+    if (!rootEl) return;
+    applyManualKeyOverrides(rootEl, "en");
+    const nodes = collectTranslatableNodes(rootEl);
+    nodes.forEach(n => {
+      delete n._translatedText;
+      n.nodeValue = lambdaify(n._origText);
+    });
+    if (rootEl === document.body && document._origTitle) {
+      document.title = lambdaify(document._origTitle);
+    }
+  }
+
   async function translateContainer(rootEl, langCode) {
     if (!rootEl) return;
     applyManualKeyOverrides(rootEl, langCode);
     const nodes = collectTranslatableNodes(rootEl);
 
     if (langCode === "en") {
-      nodes.forEach(n => {
-        delete n._translatedText;
-        n.nodeValue = lambdaify(n._origText);
-      });
-      if (rootEl === document.body) {
-        if (!document._origTitle) document._origTitle = document.title;
-        document.title = lambdaify(document._origTitle);
-      }
+      revertContainerToEnglish(rootEl);
       return;
     }
 
-    // Batch unique strings for speed
+    if (translationHaltedForLimit) {
+      throw new Error("Translation rate limit reached.");
+    }
+
+    // Request one at a time so rate limits stop immediately without firing concurrent bursts
     const uniqueTexts = [...new Set(nodes.map(n => n._origText))];
-    const batchSize = 10;
     let batchError = null;
-    for (let i = 0; i < uniqueTexts.length; i += batchSize) {
-      if (translationHaltedForLimit) break;
-      const slice = uniqueTexts.slice(i, i + batchSize);
+    for (let i = 0; i < uniqueTexts.length; i++) {
+      if (translationHaltedForLimit) {
+        batchError = batchError || new Error("Translation rate limit reached.");
+        break;
+      }
       try {
-        await Promise.all(slice.map(t => fetchFreeTranslation(t, langCode)));
+        await fetchFreeTranslation(uniqueTexts[i], langCode);
       } catch (err) {
         batchError = err;
         break;
@@ -444,11 +466,11 @@
     }
     saveTranslationCache();
 
-    if (batchError) {
-      showTranslationErrorPopup(batchError.message, false);
+    if (batchError || translationHaltedForLimit) {
+      revertContainerToEnglish(rootEl);
+      throw batchError || new Error("Translation rate limit reached.");
     }
 
-    // Apply cached/manual/protected text without issuing further network requests on error
     for (const n of nodes) {
       const trimmed = n._origText.trim();
       const cacheKey = langCode + "::" + trimmed;
@@ -464,13 +486,14 @@
       }
     }
 
-    if (rootEl === document.body && !batchError && !translationHaltedForLimit) {
+    if (rootEl === document.body && !translationHaltedForLimit) {
       if (!document._origTitle) document._origTitle = document.title;
       try {
         const trTitle = await fetchFreeTranslation(document._origTitle, langCode);
         document.title = lambdaify(trTitle);
       } catch (err) {
-        showTranslationErrorPopup(err.message, false);
+        revertContainerToEnglish(rootEl);
+        throw err;
       }
     }
   }
@@ -531,8 +554,10 @@
     const img = $("img", card);
     img.addEventListener("error", () => { img.src = placeholder(person.name); }, { once: true });
 
-    if (activeLangCode !== "en") {
-      translateContainer(card, activeLangCode);
+    if (activeLangCode !== "en" && !translationHaltedForLimit) {
+      translateContainer(card, activeLangCode).catch(() => {
+        revertToEnglishState("Translation failed.");
+      });
     }
     return card;
   }
@@ -740,8 +765,13 @@
       const pic = $("img.guild-slide-image", box);
       if (pic) pic.addEventListener("error", () => { pic.outerHTML = '<div class="guild-slide-image no-image"></div>'; }, { once: true });
 
-      if (activeLangCode !== "en") {
-        translateContainer(box, activeLangCode).then(() => updateSlideOverflowButton(box, state.expanded));
+      if (activeLangCode !== "en" && !translationHaltedForLimit) {
+        translateContainer(box, activeLangCode)
+          .then(() => updateSlideOverflowButton(box, state.expanded))
+          .catch(() => {
+            revertToEnglishState("Translation failed.");
+            requestAnimationFrame(() => updateSlideOverflowButton(box, state.expanded));
+          });
       } else {
         requestAnimationFrame(() => updateSlideOverflowButton(box, state.expanded));
       }
@@ -816,10 +846,13 @@
       normsBtn.setAttribute("aria-expanded", String(expanded));
       const label = expanded ? "Show Less" : "View Full Guild Norms";
       normsBtn._origText = label;
-      if (activeLangCode !== "en") {
+      if (activeLangCode !== "en" && !translationHaltedForLimit) {
         fetchFreeTranslation(label, activeLangCode)
           .then(tr => { normsBtn.textContent = lambdaify(tr); })
-          .catch(err => { showTranslationErrorPopup(err.message, false); });
+          .catch(err => {
+            normsBtn.textContent = lambdaify(label);
+            revertToEnglishState(err.message);
+          });
       } else {
         normsBtn.textContent = lambdaify(label);
       }
@@ -920,9 +953,11 @@
   function animateText(el, value, className) {
     if (!el) return;
     el.classList.remove(className);
-    void el.offsetWidth;
     el.textContent = lambdaify(value);
-    el.classList.add(className);
+    requestAnimationFrame(() => {
+      void el.offsetWidth;
+      el.classList.add(className);
+    });
   }
 
   function showLanguagePreview(i) {
@@ -949,6 +984,21 @@
   function refreshAllLanguageMenus() {
     buildLanguageMenuItems(languageMenu);
     buildLanguageMenuItems(navLanguageSublist);
+  }
+
+  function revertToEnglishState(reason) {
+    const enIdx = Math.max(0, languages.findIndex(l => l.code === "en"));
+    languageIndex = enIdx;
+    activeLangCode = "en";
+    userPinnedLanguage = false;
+    document.documentElement.lang = "en";
+    revertContainerToEnglish(document.body);
+    showLanguagePreview(enIdx);
+    refreshAllLanguageMenus();
+    slideBoxes.forEach(box => {
+      if (box._slideState) updateSlideOverflowButton(box, box._slideState.expanded);
+    });
+    showTranslationErrorPopup(reason, false);
   }
 
   async function selectWebsiteLanguage(code) {
@@ -987,6 +1037,8 @@
       slideBoxes.forEach(box => {
         if (box._slideState) updateSlideOverflowButton(box, box._slideState.expanded);
       });
+    } catch (err) {
+      revertToEnglishState(err && err.message ? err.message : "Translation failed.");
     } finally {
       if (langSpinner) langSpinner.hidden = true;
     }
